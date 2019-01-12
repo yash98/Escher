@@ -133,15 +133,6 @@ Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool retur
 
 Matrix Matrix::pooling(Matrix::poolingMethod method, bool returnInSame) {}
 
-void Matrix::toOStream(std::ostream& toThisOStream) {
-    for (std::vector<float> eachRow: matrix) {
-        for (float eachCell: eachRow) {
-            toThisOStream << eachCell << " ";
-        }
-        toThisOStream << std::endl;
-    }
-}
-
 void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, char separator, 
     std::vector<std::vector<float>>& putInMatrix) {
 

@@ -1,5 +1,4 @@
 #include "Matrix.h"
-#include "Util.h"
 
 #include <fstream>
 #include <algorithm>
@@ -38,17 +37,17 @@ Matrix::Matrix(std::string fileName, int rowNumber) {
         Matrix::splitColumnMajorAndPushBackRowMajor(line, ' ', inputMatrix);
     }
 
-    Matrix(inputMatrix);
+    matrix = inputMatrix;
     inputFile.close();
 }
 
-Matrix::Matrix convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
 
-Matrix padding(bool returnInSame, int rowPad, int columnPad) {}
+Matrix Matrix::padding(bool returnInSame, int rowPad, int columnPad) {}
 
-Matrix::Matrix nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {}
+Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {}
 
-Matrix::Matrix pooling(Matrix::poolingMethod method, bool returnInSame) {}
+Matrix Matrix::pooling(Matrix::poolingMethod method, bool returnInSame) {}
 
 void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, char separator, 
     std::vector<std::vector<float>>& putInMatrix) {
@@ -71,3 +70,5 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
         throw std::out_of_range("rowNumber is file and command line arg mismatch");
     }
 }
+
+int main() {}

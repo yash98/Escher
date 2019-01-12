@@ -46,7 +46,11 @@ Matrix::Matrix convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 
 Matrix padding(bool returnInSame, int rowPad, int columnPad) {}
 
-Matrix::Matrix nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {}
+Matrix::Matrix nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
+    if(returnInSame){
+        for(int i=0;i<)
+    }
+}
 
 Matrix::Matrix pooling(Matrix::poolingMethod method, bool returnInSame) {}
 
@@ -70,4 +74,33 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
         std::cerr << "rowNumber stated:" << putInMatrix.size() << std::endl;
         throw std::out_of_range("rowNumber is file and command line arg mismatch");
     }
+}
+
+
+float ReLu(float num){
+    return (num > 0) ? num : 0.0;
+}
+
+float TanH(float num){
+    float n1 = exp(num);
+    float n2 = exp(-1*num);
+    float ans = (n1 - n2)/(n1 + n2);
+    return ans;
+}
+
+float Sigmoid(float num){
+    return (1/(1+exp(-1*num)));
+}
+
+std::vector<float> Softmax(std::vector<float> vect){
+    std::vector<float> ans;
+    ans.reserve(vect.size());
+    float denominator = 0;
+    for(int i=0;i<vect.size();i++){
+        ans[i] = exp(vect[i]);
+        denominator += ans[i];
+    }
+    for(int i=0;i<ans.size();i++)
+        ans[i] /= denominator;
+    return ans;
 }

@@ -49,10 +49,10 @@ Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool retur
     if(returnInSame){
         if(method != Matrix::softmax){
             for(int i=0;i<this->matrix.size();i++){
-                for(int j=0;j<this->matrix[0].size(),j++){
-                    if(nonLinearActMethod == relu)this->matrix[i][j] = ReLu(this->matrix[i][j]);
-                    else if(nonLinearActivation == tanH)this->matrix[i][j] = TanH(this->matrix[i][j]);
-                    else if(nonLinearActivation == sigmoid)this->matrix[i][j] = Sigmoid(this->matrix[i][j]);
+                for(int j=0;j<this->matrix[0].size();j++){
+                    if(method == relu)this->matrix[i][j] = ReLu(this->matrix[i][j]);
+                    else if(method == tanH)this->matrix[i][j] = TanH(this->matrix[i][j]);
+                    else if(method == sigmoid)this->matrix[i][j] = Sigmoid(this->matrix[i][j]);
                 }
             }
         }
@@ -63,13 +63,13 @@ Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool retur
         return this->matrix;
     }
     else{
-        Matrix M = Matrix(this->matrix);
+        std::vector<std::vector<float> > M = this->matrix;
         if(method != softmax){
             for(int i=0;i<this->matrix.size();i++){
-                for(int j=0;j<this->matrix[0].size(),j++){
-                    if(nonLinearActMethod == relu)M[i][j] = ReLu(this->matrix[i][j]);
-                    else if(nonLinearActivation == tanH)M[i][j] = TanH(this->matrix[i][j]);
-                    else if(nonLinearActivation == sigmoid)M[i][j] = Sigmoid(this->matrix[i][j]);
+                for(int j=0;j<this->matrix[0].size();j++){
+                    if(method == Matrix::relu)M[i][j] = ReLu(this->matrix[i][j]);
+                    else if(method == tanH)M[i][j] = TanH(this->matrix[i][j]);
+                    else if(method == sigmoid)M[i][j] = Sigmoid(this->matrix[i][j]);
                 }
             }
         }

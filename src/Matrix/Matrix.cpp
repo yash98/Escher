@@ -127,6 +127,23 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
             }
         }
 
+        // multiply processedInput to kernel
+        Matrix resultMatrix = Matrix();
+        int counter = 0;
+        float sumOfProducts;
+        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
+            std::vector<float> resultRow;
+            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                sumOfProducts = 0.0;
+                for (int a=0; a<kernel.matrix.size()*kernel.matrix[0].size(); a++) {
+                    sumOfProducts += processedInput.matrix[counter][a]*processedKernel.matrix[0][a];
+                }
+                resultRow.push_back(sumOfProducts);
+            }
+            resultMatrix.matrix.push_back(resultRow);
+        }
+
+        return resultMatrix;
     }
 }
 

@@ -25,7 +25,7 @@ directories:
 	mkdir -p $(OUTPUT_DIR)
 
 # BIN/Executable Rules
-$(BIN_DIR)/mat: $(OBJ_DIR)/Matrix/Matrix.o
+$(BIN_DIR)/mat: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@
 
 # OBJ/object Rules

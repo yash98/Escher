@@ -42,17 +42,47 @@ Matrix::Matrix(std::string fileName, int rowNumber) {
     inputFile.close();
 }
 
-Matrix::Matrix convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
 
 Matrix padding(bool returnInSame, int rowPad, int columnPad) {}
 
-Matrix::Matrix nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
+Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
     if(returnInSame){
-        for(int i=0;i<)
+        if(nonLinearActMethod != softmax){
+            for(int i=0;i<this.matrix.size();i++){
+                for(int j=0;j<this.matrix[0].size(),j++){
+                    if(nonLinearActMethod == relu)this.matrix[i][j] = ReLu(this.matrix[i][j]);
+                    else if(nonLinearActivation == tanH)this.matrix[i][j] = TanH(this.matrix[i][j]);
+                    else if(nonLinearActivation == sigmoid)this.matrix[i][j] = Sigmoid(this.matrix[i][j]);
+                }
+            }
+        }
+        else{
+            for(int i=0;i<this.matrix.size();i++)
+                this.matrix[i] = Softmax(this.matrix[i]);
+        }
+        return this.matrix;
+    }
+    else{
+        Matrix M = Matrix(this.matrix);
+        if(nonLinearActMethod != softmax){
+            for(int i=0;i<this.matrix.size();i++){
+                for(int j=0;j<this.matrix[0].size(),j++){
+                    if(nonLinearActMethod == relu)M[i][j] = ReLu(this.matrix[i][j]);
+                    else if(nonLinearActivation == tanH)M[i][j] = TanH(this.matrix[i][j]);
+                    else if(nonLinearActivation == sigmoid)M[i][j] = Sigmoid(this.matrix[i][j]);
+                }
+            }
+        }
+        else{
+            for(int i=0;i<this.matrix.size();i++)
+                M[i] = Softmax(this.matrix[i]);
+        }
+        return M;
     }
 }
 
-Matrix::Matrix pooling(Matrix::poolingMethod method, bool returnInSame) {}
+Matrix Matrix::pooling(Matrix::poolingMethod method, bool returnInSame) {}
 
 void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, char separator, 
     std::vector<std::vector<float>>& putInMatrix) {

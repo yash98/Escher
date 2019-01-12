@@ -23,17 +23,19 @@ public:
     Matrix(std::vector<std::vector<float>> inputMatrix);
     Matrix(std::string fileName, int rowNumber);
 
+    // SPECIAL CLASS FUNCTIONS
+    Matrix copy();
+
+    void toOStream(std::ostream& toThisOStream);
+
     // FUNCTION MEMBERS
     Matrix convolution(const Matrix& kernel, bool doPadding, convolMethod method);
 
-    Matrix padding(bool returnInSame, int rowPad, int columnPad);
+    void padding(int rowPad, int columnPad);
 
     Matrix nonLinearActivation(nonLinearActMethod method, bool returnInSame);
 
     Matrix pooling(poolingMethod method, bool returnInSame);
-
-    // CONVERTOR
-    void toOStream(std::ostream& toThisOStream);
 
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:

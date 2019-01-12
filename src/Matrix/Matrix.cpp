@@ -43,9 +43,57 @@ Matrix::Matrix(std::string fileName, int rowNumber) {
     inputFile.close();
 }
 
+void Matrix::toOStream(std::ostream& toThisOStream) {
+    for (std::vector<float> eachRow: matrix) {
+        for (float eachCell: eachRow) {
+            toThisOStream << eachCell << " ";
+        }
+        toThisOStream << std::endl;
+    }
+}
+
+Matrix Matrix::copy() {
+    std::vector<std::vector<float>> copyInputMatrix;
+    copyInputMatrix.reserve(matrix.size());
+    int numOfColumns = matrix[0].size();
+
+    for (std::vector<float> eachRow: matrix) {
+        std::vector<float> copyEachRow;
+        copyEachRow.reserve(numOfColumns);
+        for (float eachCell: eachRow) {
+            copyEachRow.push_back(eachCell);
+        }
+        copyInputMatrix.push_back(copyEachRow);
+    }
+
+    return Matrix(copyInputMatrix);
+}
+
 Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
 
-Matrix Matrix::padding(bool returnInSame, int rowPad, int columnPad) {}
+void Matrix::padding(int rowPad, int columnPad) {
+    // currently only for zero pad
+    // add column pad i.e columns to existing rows
+    std::vector<float>::iterator it1;
+    for (std::vector<float> eachRow: matrix) {
+        it1 = eachRow.begin();
+        eachRow.insert(it1, columnPad, 0.0);
+        it1 = eachRow.end();
+        eachRow.insert(it1, columnPad, 0.0);
+    }
+
+    // add rowpad i.e more rows to vec of vec
+    std::vector<float> zeroVec;
+    zeroVec.reserve(matrix[0].size());
+    for (int i=0; i<matrix[0].size(); i++) {
+        zeroVec.push_back(0.0);
+    }
+
+    std::vector<std::vector<float>>::iterator it2 = matrix.begin();
+    matrix.insert(it2, columnPad, zeroVec);
+    it2 = matrix.end();
+    matrix.insert(it2, columnPad, zeroVec);
+}
 
 Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
     if(returnInSame){

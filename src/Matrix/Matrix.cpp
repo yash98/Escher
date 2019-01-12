@@ -69,7 +69,66 @@ Matrix Matrix::copy() {
     return Matrix(copyInputMatrix);
 }
 
-Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
+    if (method == simpleConvol) {
+        Matrix resultMatrix = Matrix();
+        float sumOfProducts;
+
+        // TODO: check iteration
+        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
+            std::vector<float> resultRow;
+            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                sumOfProducts = 0.0;
+
+                for (int i=kernel.matrix.size()-1+x; i>=x; i--) {
+                    for (int j=kernel.matrix[0].size()-1+y; j>=y; j--) {
+
+                        sumOfProducts += 
+                        matrix[x+kernel.matrix.size()-1-i][y+kernel.matrix[0].size()-1-j]*kernel.matrix[i][j];
+                    
+                    }
+                }
+
+                resultRow.push_back(sumOfProducts);
+            }
+            resultMatrix.matrix.push_back(resultRow);
+        }
+
+        return resultMatrix;
+
+
+    } else if (method == matrixMult) {
+        Matrix processedInput = Matrix();
+
+        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
+            std::vector<float> processedRow;
+            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+
+                for (int i=kernel.matrix.size()-1+x; i>=x; i--) {
+                    for (int j=kernel.matrix[0].size()-1+y; j>=y; j--) {
+
+                        processedRow.push_back(
+                        matrix[x+kernel.matrix.size()-1-i][y+kernel.matrix[0].size()-1-j]);
+                    
+                    }
+                }
+
+                processedInput.matrix.push_back(processedRow);
+            }
+        }
+
+        // not column vector here for ease of coding
+        Matrix processedKernel = Matrix();
+        std::vector<float> actuallyColumnVector;
+
+        for (int i=kernel.matrix.size()-1; i>=0; i--) {
+            for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
+                actuallyColumnVector.push_back(kernel.matrix[i][j]);
+            }
+        }
+
+    }
+}
 
 void Matrix::padding(int rowPad, int columnPad) {
     // currently only for zero pad

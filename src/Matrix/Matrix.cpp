@@ -1,9 +1,11 @@
 #include "Matrix.h"
+#include "Util.h"
 
 #include <fstream>
 #include <algorithm>
 #include <iostream>
-#include <math.h>
+
+
 Matrix::Matrix() {}
 
 Matrix::Matrix(std::vector<std::vector<float>> inputMatrix) {
@@ -37,28 +39,28 @@ Matrix::Matrix(std::string fileName, int rowNumber) {
         Matrix::splitColumnMajorAndPushBackRowMajor(line, ' ', inputMatrix);
     }
 
-    Matrix(inputMatrix);
+    matrix = inputMatrix;
     inputFile.close();
 }
 
 Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {}
 
-Matrix padding(bool returnInSame, int rowPad, int columnPad) {}
+Matrix Matrix::padding(bool returnInSame, int rowPad, int columnPad) {}
 
 Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
     if(returnInSame){
         if(method != Matrix::softmax){
             for(int i=0;i<this->matrix.size();i++){
                 for(int j=0;j<this->matrix[0].size();j++){
-                    if(method == relu)this->matrix[i][j] = ReLu(this->matrix[i][j]);
-                    else if(method == tanH)this->matrix[i][j] = TanH(this->matrix[i][j]);
-                    else if(method == sigmoid)this->matrix[i][j] = Sigmoid(this->matrix[i][j]);
+                    if(method == relu)this->matrix[i][j] = Util::ReLu(this->matrix[i][j]);
+                    else if(method == tanH)this->matrix[i][j] = Util::TanH(this->matrix[i][j]);
+                    else if(method == sigmoid)this->matrix[i][j] = Util::Sigmoid(this->matrix[i][j]);
                 }
             }
         }
         else{
             for(int i=0;i<this->matrix.size();i++)
-                this->matrix[i] = Softmax(this->matrix[i]);
+                this->matrix[i] = Util::Softmax(this->matrix[i]);
         }
         return this->matrix;
     }
@@ -67,15 +69,15 @@ Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool retur
         if(method != softmax){
             for(int i=0;i<this->matrix.size();i++){
                 for(int j=0;j<this->matrix[0].size();j++){
-                    if(method == Matrix::relu)M[i][j] = ReLu(this->matrix[i][j]);
-                    else if(method == tanH)M[i][j] = TanH(this->matrix[i][j]);
-                    else if(method == sigmoid)M[i][j] = Sigmoid(this->matrix[i][j]);
+                    if(method == Matrix::relu)M[i][j] = Util::ReLu(this->matrix[i][j]);
+                    else if(method == tanH)M[i][j] = Util::TanH(this->matrix[i][j]);
+                    else if(method == sigmoid)M[i][j] = Util::Sigmoid(this->matrix[i][j]);
                 }
             }
         }
         else{
             for(int i=0;i<this->matrix.size();i++)
-                M[i] = Softmax(this->matrix[i]);
+                M[i] = Util::Softmax(this->matrix[i]);
         }
         return M;
     }
@@ -103,33 +105,4 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
         std::cerr << "rowNumber stated:" << putInMatrix.size() << std::endl;
         throw std::out_of_range("rowNumber is file and command line arg mismatch");
     }
-}
-
-
-float ReLu(float num){
-    return (num > 0) ? num : 0.0;
-}
-
-float TanH(float num){
-    float n1 = exp(num);
-    float n2 = exp(-1*num);
-    float ans = (n1 - n2)/(n1 + n2);
-    return ans;
-}
-
-float Sigmoid(float num){
-    return (1/(1+exp(-1*num)));
-}
-
-std::vector<float> Softmax(std::vector<float> vect){
-    std::vector<float> ans;
-    ans.reserve(vect.size());
-    float denominator = 0;
-    for(int i=0;i<vect.size();i++){
-        ans[i] = exp(vect[i]);
-        denominator += ans[i];
-    }
-    for(int i=0;i<ans.size();i++)
-        ans[i] /= denominator;
-    return ans;
 }

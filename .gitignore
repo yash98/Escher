@@ -1,5 +1,7 @@
 # Personal
 .vscode/
+bin/
+build/
 
 # Prerequisites
 *.d

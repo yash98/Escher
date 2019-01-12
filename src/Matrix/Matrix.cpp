@@ -51,7 +51,7 @@ Matrix::Matrix nonLinearActivation(Matrix::nonLinearActMethod method, bool retur
 Matrix::Matrix pooling(Matrix::poolingMethod method, bool returnInSame) {}
 
 void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, char separator, 
-std::vector<std::vector<float>>& putInMatrix) {
+    std::vector<std::vector<float>>& putInMatrix) {
 
     std::string::const_iterator start = original.begin();
     std::string::const_iterator end = original.end();

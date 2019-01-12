@@ -3,11 +3,15 @@
 
 #include <vector>
 #include <string>
+#include <ostream>
 
 class Matrix {
 public:
     // DATA MEMBERS
     std::vector<std::vector<float>> matrix;
+
+    // TYPES OF MATRIX REPRESENTATION, IF NEEDED LATER
+    // enum majorOrder {};
 
     // OPTIONS FOR FUNCTIONS
     enum convolMethod {simpleConvol, matrixMult};
@@ -28,6 +32,10 @@ public:
 
     Matrix pooling(poolingMethod method, bool returnInSame);
 
+    // CONVERTOR
+    void toOStream(std::ostream& toThisOStream);
+
+    // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:
     static void splitColumnMajorAndPushBackRowMajor(std::string const& original, 
         char separator, std::vector<std::vector<float>>& putInMatrix);

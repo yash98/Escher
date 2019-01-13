@@ -70,6 +70,10 @@ Matrix Matrix::copy() {
 }
 
 Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
+    if (doPadding) {
+        this->padding(kernel.matrix.size()-1, kernel.matrix[0].size()-1);
+    }
+    
     if (method == simpleConvol) {
         Matrix resultMatrix = Matrix();
         float sumOfProducts;
@@ -84,7 +88,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
                     for (int j=kernel.matrix[0].size()-1+y; j>=y; j--) {
 
                         sumOfProducts += 
-                        matrix[x+kernel.matrix.size()-1-i][y+kernel.matrix[0].size()-1-j]*kernel.matrix[i][j];
+                        matrix[i][j]*kernel.matrix[x+kernel.matrix.size()-1-i][y+kernel.matrix[0].size()-1-j];
                     
                     }
                 }
@@ -101,14 +105,13 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         Matrix processedInput = Matrix();
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
-            std::vector<float> processedRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-
+                std::vector<float> processedRow;
                 for (int i=kernel.matrix.size()-1+x; i>=x; i--) {
                     for (int j=kernel.matrix[0].size()-1+y; j>=y; j--) {
 
                         processedRow.push_back(
-                        matrix[x+kernel.matrix.size()-1-i][y+kernel.matrix[0].size()-1-j]);
+                        matrix[i][j]);
                     
                     }
                 }
@@ -126,6 +129,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
                 actuallyColumnVector.push_back(kernel.matrix[i][j]);
             }
         }
+        processedKernel.matrix.push_back(actuallyColumnVector);
 
         // multiply processedInput to kernel
         Matrix resultMatrix = Matrix();
@@ -139,6 +143,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
                     sumOfProducts += processedInput.matrix[counter][a]*processedKernel.matrix[0][a];
                 }
                 resultRow.push_back(sumOfProducts);
+                counter++;
             }
             resultMatrix.matrix.push_back(resultRow);
         }

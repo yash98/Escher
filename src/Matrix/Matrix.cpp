@@ -107,8 +107,8 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
                 std::vector<float> processedRow;
-                for (int i=kernel.matrix.size()-1+x; i>=x; i--) {
-                    for (int j=kernel.matrix[0].size()-1+y; j>=y; j--) {
+                for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
+                    for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
 
                         processedRow.push_back(
                         matrix[i][j]);

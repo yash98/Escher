@@ -33,9 +33,9 @@ public:
 
     void padding(int rowPad, int columnPad);
 
-    Matrix nonLinearActivation(nonLinearActMethod method, bool returnInSame);
+    void nonLinearActivation(nonLinearActMethod method);
 
-    Matrix pooling(poolingMethod method, bool returnInSame);
+    Matrix pooling(poolingMethod method, int num_rows, int num_columns);
 
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:

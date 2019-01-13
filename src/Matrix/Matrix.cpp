@@ -181,43 +181,52 @@ void Matrix::padding(int rowPad, int columnPad) {
     }
 }
 
-Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {
-    if(returnInSame){
-        if(method != Matrix::softmax){
-            for(int i=0;i<this->matrix.size();i++){
-                for(int j=0;j<this->matrix[0].size();j++){
-                    if(method == relu)this->matrix[i][j] = Util::ReLu(this->matrix[i][j]);
-                    else if(method == tanH)this->matrix[i][j] = Util::TanH(this->matrix[i][j]);
-                    else if(method == sigmoid)this->matrix[i][j] = Util::Sigmoid(this->matrix[i][j]);
-                }
+void Matrix::nonLinearActivation(Matrix::nonLinearActMethod method) {
+    if(method != softmax){
+        for(int i=0;i<this->matrix.size();i++){
+            for(int j=0;j<this->matrix[0].size();j++){
+                if(method == relu)this->matrix[i][j] = Util::ReLu(this->matrix[i][j]);
+                else if(method == tanH)this->matrix[i][j] = Util::TanH(this->matrix[i][j]);
+                else if(method == sigmoid)this->matrix[i][j] = Util::Sigmoid(this->matrix[i][j]);
             }
         }
-        else{
-            for(int i=0;i<this->matrix.size();i++)
-                this->matrix[i] = Util::Softmax(this->matrix[i]);
-        }
-        return this->matrix;
     }
     else{
-        std::vector<std::vector<float> > M = this->matrix;
-        if(method != softmax){
-            for(int i=0;i<this->matrix.size();i++){
-                for(int j=0;j<this->matrix[0].size();j++){
-                    if(method == Matrix::relu)M[i][j] = Util::ReLu(this->matrix[i][j]);
-                    else if(method == tanH)M[i][j] = Util::TanH(this->matrix[i][j]);
-                    else if(method == sigmoid)M[i][j] = Util::Sigmoid(this->matrix[i][j]);
-                }
-            }
-        }
-        else{
-            for(int i=0;i<this->matrix.size();i++)
-                M[i] = Util::Softmax(this->matrix[i]);
-        }
-        return M;
+        for(int i=0;i<this->matrix.size();i++)
+            this->matrix[i] = Util::Softmax(this->matrix[i]);
     }
 }
 
-Matrix Matrix::pooling(Matrix::poolingMethod method, bool returnInSame) {}
+
+Matrix Matrix::pooling(Matrix::poolingMethod method, int num_rows, int num_columns) {
+    int m = this->matrix.size();
+    int n = this->matrix[0].size();
+    std::vector<std::vector<float> > M(m-num_rows+1,std::vector<float>(n-num_columns+1));
+    for(int i=0;i<m-num_rows+1;i++){
+        for(int j=0;j<n-num_columns+1;j++){
+            if(method == maxPooling){
+                float ret = -92122121.121;
+                for(int k=0;k<num_rows;k++){
+                    for(int l=0;l<num_columns;l++){
+                        if(ret < this->matrix[i+k][j+l])
+                            ret = this->matrix[i+k][j+l];
+                    }
+                }
+                M[i][j] = ret;
+            }
+            else{
+                float ret = 0.0;
+                for(int k=0;k<num_rows;k++){
+                    for(int l=0;l<num_columns;l++)
+                        ret += this->matrix[i+k][j+l];
+                }
+                M[i][j] = ret/(float)(num_rows*num_columns);
+            }
+        }
+    }
+    Matrix ans = Matrix(M);
+    return ans;
+}
 
 void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, char separator, 
     std::vector<std::vector<float>>& putInMatrix) {

@@ -78,7 +78,6 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         Matrix resultMatrix = Matrix();
         float sumOfProducts;
 
-        // TODO: check iteration
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {

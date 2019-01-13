@@ -201,28 +201,32 @@ void Matrix::nonLinearActivation(Matrix::nonLinearActMethod method) {
 Matrix Matrix::pooling(Matrix::poolingMethod method, int num_rows, int num_columns) {
     int m = this->matrix.size();
     int n = this->matrix[0].size();
-    std::vector<std::vector<float> > M(m-num_rows+1,std::vector<float>(n-num_columns+1));
+    std::vector<std::vector<float> > M;
+    M.reserve(m-num_rows+1);
     for(int i=0;i<m-num_rows+1;i++){
+        std::vector<float> rowOfM;
         for(int j=0;j<n-num_columns+1;j++){
+            rowOfM.reserve(n-num_columns+1);
             if(method == maxPooling){
-                float ret = -92122121.121;
+                float ret = std::numeric_limits<float>::min();
                 for(int k=0;k<num_rows;k++){
                     for(int l=0;l<num_columns;l++){
                         if(ret < this->matrix[i+k][j+l])
                             ret = this->matrix[i+k][j+l];
                     }
                 }
-                M[i][j] = ret;
+                rowOfM.push_back(ret);
             }
-            else{
+            else if (method == avgPooling) {
                 float ret = 0.0;
                 for(int k=0;k<num_rows;k++){
                     for(int l=0;l<num_columns;l++)
                         ret += this->matrix[i+k][j+l];
                 }
-                M[i][j] = ret/(float)(num_rows*num_columns);
+                rowOfM.push_back(ret/(float)(num_rows*num_columns));
             }
         }
+        M.push_back(rowOfM);
     }
     Matrix ans = Matrix(M);
     return ans;

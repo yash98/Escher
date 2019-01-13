@@ -1,6 +1,8 @@
 #include "../include/Matrix/Matrix.h"
 #include "../include/Matrix/Util.h"
 
+#include <cblas.h>
+
 #include <fstream>
 #include <algorithm>
 #include <iostream>
@@ -110,49 +112,56 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         return resultMatrix;
 
 
-    } else if (method == matrixMult) {
-        Matrix processedInput = Matrix();
+    } else if (method == matrixMultBLAS) {
+        int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
+        int n = kernel.matrix.size()*kernel.matrix[0].size();
+        int k = 1;
+
+        float processedInput[m][n];
+        int count = 0;
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                std::vector<float> processedRow;
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
 
-                        processedRow.push_back(
-                        matrix[i][j]);
+                        processedInput[count][i*kernel.matrix[0].size()+j]=matrix[i][j];
                     
                     }
                 }
-
-                processedInput.matrix.push_back(processedRow);
+                count++;
             }
         }
 
         // not column vector here for ease of coding
-        Matrix processedKernel = Matrix();
-        std::vector<float> actuallyColumnVector;
-
+        float processedKernel[n][k];
+        count = 0;
         for (int i=kernel.matrix.size()-1; i>=0; i--) {
             for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
-                actuallyColumnVector.push_back(kernel.matrix[i][j]);
+                processedKernel[count][0] = kernel.matrix[i][j];
+                count++;
             }
         }
-        processedKernel.matrix.push_back(actuallyColumnVector);
 
         // multiply processedInput to kernel
-        Matrix resultMatrix = Matrix();
-        int counter = 0;
-        float sumOfProducts;
+        float resultArray [m][k];
+
+        const float* a = &processedInput[0][0];
+        const float* b = &processedKernel[0][0];
+        float* c = &resultArray[0][0];
+
+        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
+            m, n, k, 
+            1.0, a, k, b, n, 0.0, c, n);
+
+        Matrix resultMatrix;
+
+        count = 0;
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                sumOfProducts = 0.0;
-                for (int a=0; a<kernel.matrix.size()*kernel.matrix[0].size(); a++) {
-                    sumOfProducts += processedInput.matrix[counter][a]*processedKernel.matrix[0][a];
-                }
-                resultRow.push_back(sumOfProducts);
-                counter++;
+                resultRow.push_back(resultArray[count][0]);
+                count++;
             }
             resultMatrix.matrix.push_back(resultRow);
         }

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iostream>
-
+#include <cmath>
 
 Matrix::Matrix() {}
 
@@ -71,7 +71,7 @@ Matrix Matrix::copy() {
 
 Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
     if (doPadding) {
-        this->padding(kernel.matrix.size()-1, kernel.matrix[0].size()-1);
+        this->padding(kernel.matrix.size(), kernel.matrix[0].size());
     }
     
     if (method == simpleConvol) {
@@ -153,14 +153,19 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 }
 
 void Matrix::padding(int rowPad, int columnPad) {
-    // currently only for zero pad
-    // add column pad i.e columns to existing rows
+    // TODO: could cause error due to shallow copy, dont think will cause error yet
+    // special padding to maintain size
+    // currently only for zero value pad
+    // add column pad i.e columns-1/2 to existing rows
+    float rowPadFloat = float(rowPad);
+    float columnPadFloat = float(columnPad);
     std::vector<float>::iterator it1;
-    for (std::vector<float> eachRow: matrix) {
+    for (std::vector<float>& eachRow: matrix) {
         it1 = eachRow.begin();
-        eachRow.insert(it1, columnPad, 0.0);
-        it1 = eachRow.end();
-        eachRow.insert(it1, columnPad, 0.0);
+        eachRow.insert(it1, std::floor((columnPadFloat-1)/2), 0.0);
+        for (int i=0; i < std::ceil((columnPadFloat-1)/2); i++) {
+            eachRow.push_back(0.0);
+        }
     }
 
     // add rowpad i.e more rows to vec of vec
@@ -171,9 +176,10 @@ void Matrix::padding(int rowPad, int columnPad) {
     }
 
     std::vector<std::vector<float>>::iterator it2 = matrix.begin();
-    matrix.insert(it2, columnPad, zeroVec);
-    it2 = matrix.end();
-    matrix.insert(it2, columnPad, zeroVec);
+    matrix.insert(it2, std::floor((rowPadFloat-1)/2), zeroVec);
+    for (int i = 0; i < std::ceil((rowPadFloat-1)/2); i++) {
+        matrix.push_back(zeroVec);
+    }
 }
 
 Matrix Matrix::nonLinearActivation(Matrix::nonLinearActMethod method, bool returnInSame) {

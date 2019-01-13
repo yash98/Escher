@@ -7,6 +7,8 @@ CXX = g++
 
 # Remove warning and add -Wall Flag
 CXX_ASSEMBLER_FLAGS := -std=c++11 $(ADD_G++_FLAGS) 
+INCLUDE_FLAGS = -I /opt/OpenBLAS/include/ 
+SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread
 
 # Directories
 SRC_DIR = src
@@ -26,11 +28,11 @@ directories:
 
 # BIN/Executable Rules
 $(BIN_DIR)/mat: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
-	$(CXX) $^ -o $@
+	$(CXX) $^ -o $@ $(SHARED_LINK_FLAGS)
 
 # OBJ/object Rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@
+	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@ $(INCLUDE_FLAGS)
 
 .PHONY: clean
 clean:

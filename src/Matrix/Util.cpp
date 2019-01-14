@@ -8,6 +8,8 @@ float Util::ReLu(float num){
 }
 
 float Util::TanH(float num){
+    if(num > 8)return 1.0;
+    if(num < -8)return -1.0;
     float n1 = exp(num);
     float n2 = exp(-1*num);
     float ans = (n1 - n2)/(n1 + n2);
@@ -15,6 +17,7 @@ float Util::TanH(float num){
 }
 
 float Util::Sigmoid(float num){
+    if(num > 15)return 1.0;
     return (1/(1+exp(-1*num)));
 }
 

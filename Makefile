@@ -7,8 +7,8 @@ CXX = g++
 
 # Remove warning and add -Wall Flag
 CXX_ASSEMBLER_FLAGS := -std=c++11 $(ADD_G++_FLAGS) 
-INCLUDE_FLAGS = -I /opt/OpenBLAS/include/ 
-SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread
+INCLUDE_FLAGS = -I /opt/OpenBLAS/include/ -I /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/include/ -DMKL_ILP64 -m64
+SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread   -Wl,--start-group /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_intel_ilp64.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_gnu_thread.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl
 
 # Directories
 SRC_DIR = src

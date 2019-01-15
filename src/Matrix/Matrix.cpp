@@ -1,7 +1,8 @@
 #include "Matrix.h"
 #include "Util.h"
 
-#include <cblas.h>
+// #include <cblas.h>
+#include <mkl_cblas.h>
 
 #include <fstream>
 #include <algorithm>
@@ -136,9 +137,9 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         // multiply processedInput to kernel
         float resultArray [m][k];
 
-        const float* a = &processedInput[0][0];
-        const float* b = &processedKernel[0][0];
-        float* c = &resultArray[0][0];
+        const float* a = &(processedInput[0][0]);
+        const float* b = &(processedKernel[0][0]);
+        float* c = &(resultArray[0][0]);
 
         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
             m, n, k, 

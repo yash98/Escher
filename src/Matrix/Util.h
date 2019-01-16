@@ -12,6 +12,7 @@ namespace Util
     float TanH(float num);
     float Sigmoid(float num);
     std::vector<float> Softmax(std::vector<float> vect);
+    std::vector<std::string> split( std::string const& original, char separator );
 };
 
 #endif /* UTIL_H */

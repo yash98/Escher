@@ -290,7 +290,7 @@ int main (int argc, char* argv[]) {
         Matrix result = input.convolution(kernel, doPadding, method);
         result.toOStream(std::cout);
     } else if (functionName == "pooling") {
-        if (argc < 5) {
+        if (argc < 7) {
             std::cerr << "Number of args incorrect." << std::endl;
             return -1;
         }
@@ -307,6 +307,10 @@ int main (int argc, char* argv[]) {
         Matrix result = input.pooling(method, atoi(argv[5]), atoi(argv[6]));
         result.toOStream(std::cout);
     } else if (functionName == "nonLinearActivation") {
+        if (argc < 5) {
+            std::cerr << "Number of args incorrect." << std::endl;
+            return -1;
+        }
         Matrix input = Matrix(argv[2], atoi(argv[3]));
         Matrix::nonLinearActMethod method;
         if (std::string(argv[4]) == "relu") {

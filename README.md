@@ -16,8 +16,8 @@ Format of any command:
 
     *arguments:*   
     2. input image file   
-    3. number of rows in input image
-    4. kernel file   
-    5. number of rows in kernel     
-    6. pad - for applying enough padding to keep image size maintained. noPad - to apply no padding     
+    3. number of rows in input image    
+    4. kernel file  
+    5. number of rows in kernel    
+    6. write `pad` - for applying enough padding to keep image size maintained. `noPad` - to apply no padding     
     7. method of convolutions: simpleConvol, matrixMult 

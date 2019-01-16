@@ -253,3 +253,77 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
         throw std::out_of_range("rowNumber is file and command line arg mismatch");
     }
 }
+
+int main (int argc, char* argv[]) {
+    //  ./yourcode.out convolution_withpadding_matrixmult padsize matrix1.txt matrix1_numrows matrix2.txt matrix2_numrows
+    if (argc<1) {
+        std::cerr << "No args provided. Check README.md for usage." << std::endl;
+        return -1;
+    }
+    std::string functionName = argv[1];
+    if (functionName == "convolution") {
+        if (argc < 8) {
+            std::cerr << "Number of args incorrect." << std::endl;
+            return -1;
+        }
+        // we take no padsize
+        Matrix input = Matrix(argv[2], atoi(argv[3]));
+        Matrix kernel = Matrix(argv[4], atoi(argv[5]));
+        bool doPadding;
+        if (argv[6] == "pad") {
+            doPadding = true;
+        } else if (argv[6] == "noPad") {
+            doPadding = false;
+        } else {
+            std::cerr << "Specify info about padding." << std::endl;
+            return -1;
+        }
+        Matrix::convolMethod method;
+        if (argv[7] = "simpleConvol") {
+            method = Matrix::simpleConvol;
+        } else if (argv[7] = "matrixMult") {
+            method = Matrix::matrixMult;
+        } else {
+            std::cerr << "Wrong convolMetod given." << std::endl;
+            return -1;
+        }
+        Matrix result = input.convolution(kernel, doPadding, method);
+        result.toOStream(std::cout);
+    } else if (functionName == "pooling") {
+        if (argc < 6) {
+            std::cerr << "Number of args incorrect." << std::endl;
+            return -1;
+        }
+        Matrix input = Matrix(argv[2], atoi(argv[3]));
+        Matrix::poolingMethod method;
+        if (argv[3] == "maxPooling") {
+            method = Matrix::maxPooling;
+        } else if (argv[3] == "avgPooling") {
+            method = Matrix::avgPooling;
+        } else {
+            std::cerr << "Wrong poolingMethod given." << std::endl;
+            return -1;
+        }
+        Matrix result = input.pooling(method, atoi(argv[4]), atoi(argv[5]));
+        result.toOStream(std::cout);
+    } else if (functionName == "nonLinearActivation") {
+        Matrix input = Matrix(argv[2], atoi(argv[3]));
+        Matrix::nonLinearActMethod method;
+        if (argv[4] == "relu") {
+            method = Matrix::relu;
+        } else if (argv[4] == "tanH") {
+            method = Matrix::tanH;
+        } else if (argv[4] == "softmax") {
+            method = Matrix::softmax;
+        } else if (argv[4] == "sigmoid") {
+            method = Matrix::sigmoid;
+        } else {
+            std::cerr << "Wrong nonLinearActMethod given." << std::endl;
+            return -1;
+        }
+        input.nonLinearActivation(method);
+        input.toOStream(std::cout);
+    } else {
+        std::cerr << "Wrong Function name given." << std::endl;
+    }
+}

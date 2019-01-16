@@ -270,18 +270,18 @@ int main (int argc, char* argv[]) {
         Matrix input = Matrix(argv[2], atoi(argv[3]));
         Matrix kernel = Matrix(argv[4], atoi(argv[5]));
         bool doPadding;
-        if (argv[6] == "pad") {
+        if (std::string(argv[6]) == "pad") {
             doPadding = true;
-        } else if (argv[6] == "noPad") {
+        } else if (std::string(argv[6]) == "noPad") {
             doPadding = false;
         } else {
             std::cerr << "Specify info about padding." << std::endl;
             return -1;
         }
         Matrix::convolMethod method;
-        if (argv[7] = "simpleConvol") {
+        if (std::string(argv[7]) == "simpleConvol") {
             method = Matrix::simpleConvol;
-        } else if (argv[7] = "matrixMult") {
+        } else if (std::string(argv[7]) == "matrixMult") {
             method = Matrix::matrixMult;
         } else {
             std::cerr << "Wrong convolMetod given." << std::endl;
@@ -296,9 +296,9 @@ int main (int argc, char* argv[]) {
         }
         Matrix input = Matrix(argv[2], atoi(argv[3]));
         Matrix::poolingMethod method;
-        if (argv[3] == "maxPooling") {
+        if (std::string(argv[3]) == "maxPooling") {
             method = Matrix::maxPooling;
-        } else if (argv[3] == "avgPooling") {
+        } else if (std::string(argv[3]) == "avgPooling") {
             method = Matrix::avgPooling;
         } else {
             std::cerr << "Wrong poolingMethod given." << std::endl;
@@ -309,13 +309,13 @@ int main (int argc, char* argv[]) {
     } else if (functionName == "nonLinearActivation") {
         Matrix input = Matrix(argv[2], atoi(argv[3]));
         Matrix::nonLinearActMethod method;
-        if (argv[4] == "relu") {
+        if (std::string(argv[4]) == "relu") {
             method = Matrix::relu;
-        } else if (argv[4] == "tanH") {
+        } else if (std::string(argv[4]) == "tanH") {
             method = Matrix::tanH;
-        } else if (argv[4] == "softmax") {
+        } else if (std::string(argv[4]) == "softmax") {
             method = Matrix::softmax;
-        } else if (argv[4] == "sigmoid") {
+        } else if (std::string(argv[4]) == "sigmoid") {
             method = Matrix::sigmoid;
         } else {
             std::cerr << "Wrong nonLinearActMethod given." << std::endl;
@@ -325,5 +325,6 @@ int main (int argc, char* argv[]) {
         input.toOStream(std::cout);
     } else {
         std::cerr << "Wrong Function name given." << std::endl;
+        return -1;
     }
 }

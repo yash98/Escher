@@ -7,30 +7,31 @@ CXX = g++
 
 # Remove warning and add -Wall Flag
 CXX_ASSEMBLER_FLAGS := -std=c++11 $(ADD_G++_FLAGS) 
+INCLUDE_FLAGS = -I include/
 
 # Directories
 SRC_DIR = src
 OBJ_DIR = build
 BIN_DIR = bin
 
-OUTPUT_DIR = $(OBJ_DIR)/Matrix $(BIN_DIR)/Matrix
+OUTPUT_DIR = $(OBJ_DIR)/Matrix $(BIN_DIR)
 
 .PHONY: all
 all:
 	make directories
-	make $(BIN_DIR)/mat
+	make $(BIN_DIR)/matrix
 
 .PHONY: directories
 directories:
 	mkdir -p $(OUTPUT_DIR)
 
 # BIN/Executable Rules
-$(BIN_DIR)/mat: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
+$(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@
 
 # OBJ/object Rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@
+	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@ $(INCLUDE_FLAGS)
 
 .PHONY: clean
 clean:

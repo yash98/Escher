@@ -1,5 +1,5 @@
-#include "Matrix.h"
-#include "Util.h"
+#include "../include/Matrix/Matrix.h"
+#include "../include/Matrix/Util.h"
 
 #include <fstream>
 #include <algorithm>

@@ -191,7 +191,7 @@ void Matrix::nonLinearActivation(Matrix::nonLinearActMethod method) {
             }
         }
     }
-    else{
+    else if(method == softmax){
         for(int i=0;i<this->matrix.size();i++)
             this->matrix[i] = Util::Softmax(this->matrix[i]);
     }

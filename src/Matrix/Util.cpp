@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include <algorithm>
-
+#include <vector>
 float Util::ReLu(float num){
     return (num > 0) ? num : 0.0;
 }
@@ -17,20 +17,23 @@ float Util::TanH(float num){
 }
 
 float Util::Sigmoid(float num){
-    if(num > 15)return 1.0;
+    if(num < -10)return 0.0;
     return (1/(1+exp(-1*num)));
 }
 
 std::vector<float> Util::Softmax(std::vector<float> vect){
     std::vector<float> ans;
-    ans.reserve(vect.size());
-    float denominator = 0;
+    float maxval = vect[0];
+    for(int i=1;i<vect.size();i++){
+        if(maxval < vect[i])maxval = vect[i];
+    }
+    float denominator = 0.0;
     for(int i=0;i<vect.size();i++){
-        ans[i] = exp(vect[i]);
+        ans.push_back(exp(vect[i]-maxval));
         denominator += ans[i];
     }
     for(int i=0;i<ans.size();i++)
-        ans[i] /= denominator;
+        ans[i] = ans[i] / denominator;
     return ans;
 }
 

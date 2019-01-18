@@ -9,6 +9,11 @@ CXX = g++
 CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
 INCLUDE_FLAGS = -I include/
 
+DEBUG ?= 1
+ifeq ($(DEBUG), 1)
+    CXX_ASSEMBLER_FLAGS +=-g
+endif
+
 # Directories
 SRC_DIR = src
 OBJ_DIR = build

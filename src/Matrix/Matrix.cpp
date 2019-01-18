@@ -41,6 +41,7 @@ Matrix::Matrix(std::string fileName, int rowNumber) {
 
     matrix = inputMatrix;
     inputFile.close();
+    checkConsistency();
 }
 
 void Matrix::toOStream(std::ostream& toThisOStream) {
@@ -67,6 +68,15 @@ Matrix Matrix::copy() {
     }
 
     return Matrix(copyInputMatrix);
+}
+
+void Matrix::checkConsistency() {
+    int rowSize = matrix[0].size();
+    for (std::vector<float> eachRow: matrix) {
+        if (rowSize != eachRow.size()) {
+            throw std::invalid_argument("Inconsistent matrix.");
+        }
+    }
 }
 
 Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {

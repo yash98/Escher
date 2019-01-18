@@ -28,6 +28,8 @@ public:
 
     void toOStream(std::ostream& toThisOStream);
 
+    void checkConsistency();
+
     // FUNCTION MEMBERS
     Matrix convolution(const Matrix& kernel, bool doPadding, convolMethod method);
 

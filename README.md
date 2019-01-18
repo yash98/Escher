@@ -32,12 +32,12 @@ Format of any command:
     5. size of pooling 
 
 - #### nonLinearActivation
-    **Ex:** `./matrix nonLinearActivation input.txt numRowsofInput `relu`
+    **Ex:** `./matrix nonLinearActivation input.txt numRowsofInput relu`
 
     *arguments:*    
     2. input file   
     3. number of rows in input file     
-    4. type of activation function  
+    4. type of activation function: relu, tanH, sigmoid, softmax
 
 ## Compiling
 For simple compiling: `make`   

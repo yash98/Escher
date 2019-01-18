@@ -41,8 +41,8 @@ Format of any command:
 
 ## Compiling
 For simple compiling: `make`   
-For debugging: `make DEBUG=1` 
-For cleaning object files and executables: `make clean`
+For debugging: `make DEBUG=1`    
+For cleaning object files and executables: `make clean`  
 
 ## Input files format
 Space separated floats. No space before end of line.

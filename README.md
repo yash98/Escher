@@ -41,7 +41,7 @@ Format of any command:
 
 ## Compiling
 For simple compiling: `make`   
-For debugging: `make ADD_G++FLAGS=-g`   
+For debugging: `make DEBUG=1` 
 For cleaning object files and executables: `make clean`
 
 ## Input files format

@@ -37,7 +37,7 @@ Format of any command:
     *arguments:*    
     2. input file   
     3. number of rows in input file     
-    4. type of activation function: relu, tanH, sigmoid, softmax
+    4. type of activation function: `relu`, `tanH`, `sigmoid`, `softmax`
 
 ## Compiling
 For simple compiling: `make`   

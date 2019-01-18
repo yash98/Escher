@@ -21,20 +21,36 @@ float Util::Sigmoid(float num){
     return (1/(1+exp(-1*num)));
 }
 
-std::vector<float> Util::Softmax(std::vector<float> vect){
-    std::vector<float> ans;
-    float maxval = vect[0];
-    for(int i=1;i<vect.size();i++){
-        if(maxval < vect[i])maxval = vect[i];
-    }
+void Util::Softmax(std::vector<std::vector<float>>& vect){
     float denominator = 0.0;
+    float maxval = vect[0][0];
     for(int i=0;i<vect.size();i++){
-        ans.push_back(exp(vect[i]-maxval));
-        denominator += ans[i];
+        for (int j=0;j<vect[i].size();j++) {
+            if (vect[i][j] > maxval) {
+                maxval = vect[i][j];
+            }
+        }
     }
-    for(int i=0;i<ans.size();i++)
-        ans[i] = ans[i] / denominator;
-    return ans;
+    for(int i=0;i<vect.size();i++){
+        for (int j=0;j<vect[i].size();j++) {
+            vect[i][j] = exp(vect[i][j]-maxval);
+            denominator += vect[i][j];
+        }
+    }
+    int totalSize = vect.size()*vect[0].size();
+    if (denominator == 0.0) {
+        for(int i=0;i<vect.size();i++) {
+            for (int j=0;j<vect[i].size();j++) {
+                vect[i][j] = 1.0/totalSize;
+            }
+        }
+    } else {
+        for(int i=0;i<vect.size();i++) {
+            for (int j=0;j<vect[i].size();j++) {
+                vect[i][j] = vect[i][j] / denominator;
+            }
+        }
+    }
 }
 
 std::vector<std::string> Util::split( std::string const& original, char separator ) {

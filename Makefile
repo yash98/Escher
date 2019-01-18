@@ -6,7 +6,7 @@ CXX = g++
 # CXX_LINKER_FLAGS
 
 # Remove warning and add -Wall Flag
-CXX_ASSEMBLER_FLAGS := -std=c++11 $(ADD_G++_FLAGS) 
+CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
 INCLUDE_FLAGS = -I include/
 
 # Directories

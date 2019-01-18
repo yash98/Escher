@@ -192,8 +192,7 @@ void Matrix::nonLinearActivation(Matrix::nonLinearActMethod method) {
         }
     }
     else if(method == softmax){
-        for(int i=0;i<this->matrix.size();i++)
-            this->matrix[i] = Util::Softmax(this->matrix[i]);
+        Util::Softmax(this->matrix);
     }
 }
 
@@ -256,7 +255,7 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
 
 int main (int argc, char* argv[]) {
     //  ./yourcode.out convolution_withpadding_matrixmult padsize matrix1.txt matrix1_numrows matrix2.txt matrix2_numrows
-    if (argc<1) {
+    if (argc<2) {
         std::cerr << "No args provided. Check README.md for usage." << std::endl;
         return -1;
     }

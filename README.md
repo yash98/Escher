@@ -4,7 +4,7 @@
 all numbering is done according to arguments received in `char* argv[]`
 
 Format of any command:
-`./mat functionName arguments`
+`./matrix functionName arguments`
 
 0. executable
 1. function name
@@ -12,7 +12,7 @@ Format of any command:
 
 ### Function Names
 - #### convolution   
-    **Ex:** `./mat convolution input.txt numRowsOfInput kernel.txt numRowsOfKernel pad matrixMult`  
+    **Ex:** `./matrix convolution input.txt numRowsOfInput kernel.txt numRowsOfKernel pad matrixMult`  
 
     *arguments:*   
     2. input file   
@@ -23,7 +23,7 @@ Format of any command:
     7. method of convolutions: simpleConvol, matrixMult 
 
 - #### pooling
-    **Ex:** `./mat pooling input.txt numRowsofInput maxpool poolingSize`
+    **Ex:** `./matrix pooling input.txt numRowsofInput maxpool poolingSize`
 
     *arguments:*    
     2. input file   
@@ -32,13 +32,23 @@ Format of any command:
     5. size of pooling 
 
 - #### nonLinearActivation
-    **Ex:** `./mat nonLinearActivation input.txt numRowsofInput `relu`
+    **Ex:** `./matrix nonLinearActivation input.txt numRowsofInput `relu`
 
     *arguments:*    
     2. input file   
     3. number of rows in input file     
     4. type of activation function  
 
+## Compiling
+For simple compiling: `make`   
+For debugging: `make ADD_G++FLAGS=-g`   
+For cleaning object files and executables: `make clean`
 
-For compiling: first run `make` command     
-Arguments 
+## Input files format
+Space separated floats. No space before end of line.
+Column Major order
+```
+0.0 0.3 6.0  
+0.1 0.4 0.7
+2.0 5.0 0.8
+```

@@ -33,13 +33,8 @@ directories:
 	mkdir -p $(OUTPUT_DIR)
 
 # BIN/Executable Rules
-<<<<<<< HEAD
 $(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
-	$(CXX) $^ -o $@
-=======
-$(BIN_DIR)/mat: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@ $(SHARED_LINK_FLAGS)
->>>>>>> oOpenblas checking
 
 # OBJ/object Rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp

@@ -14,7 +14,7 @@ public:
     // enum majorOrder {};
 
     // OPTIONS FOR FUNCTIONS
-    enum convolMethod {simpleConvol, matrixMult};
+    enum convolMethod {simpleConvol, matrixMult, matrixMultBLAS};
     enum nonLinearActMethod {relu, tanH, softmax, sigmoid};
     enum poolingMethod {maxPooling, avgPooling};
 

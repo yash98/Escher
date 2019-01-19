@@ -103,7 +103,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         return resultMatrix;
 
 
-    } else if (method == matrixMult) {
+    } else if (method == matrixMultBLAS) {
         int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
         int n = kernel.matrix.size()*kernel.matrix[0].size();
         int k = 1;

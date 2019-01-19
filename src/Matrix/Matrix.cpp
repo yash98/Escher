@@ -5,10 +5,7 @@
 // #include <mkl_cblas.h>
 
 #include <cblas.h>
-// #include <mkl_cblas.h>
-
-#include <cblas.h>
-// #include <mkl_cblas.h>
+// #include <mkl_cblas.h>`
 
 #include <fstream>
 #include <algorithm>
@@ -356,6 +353,7 @@ int main (int argc, char* argv[]) {
         std::cerr << "Wrong Function name given." << std::endl;
         return -1;
     }
+}
 // int main() {
 //     // export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/
 //     openblas_set_num_threads(4);

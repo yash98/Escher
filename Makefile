@@ -6,11 +6,11 @@ CXX = g++
 # CXX_LINKER_FLAGS
 
 # Remove warning and add -Wall Flag
-<<<<<<< HEAD
-CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
-INCLUDE_FLAGS = -I include/ /opt/OpenBLAS/include/ 
 
-DEBUG ?= 1
+CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
+INCLUDE_FLAGS = -I include/ -I /opt/OpenBLAS/include/ 
+
+DEBUG ?= 0
 ifeq ($(DEBUG), 1)
     CXX_ASSEMBLER_FLAGS +=-g
 endif

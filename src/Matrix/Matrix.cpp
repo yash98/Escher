@@ -7,6 +7,9 @@
 #include <cblas.h>
 // #include <mkl_cblas.h>
 
+#include <cblas.h>
+// #include <mkl_cblas.h>
+
 #include <fstream>
 #include <algorithm>
 #include <iostream>

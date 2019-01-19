@@ -15,10 +15,6 @@ ifeq ($(DEBUG), 1)
     CXX_ASSEMBLER_FLAGS +=-g
 endif
 
-=======
-CXX_ASSEMBLER_FLAGS := -std=c++11 $(ADD_G++_FLAGS) 
-INCLUDE_FLAGS = -I /opt/OpenBLAS/include/
->>>>>>> 5a83314e50923acd4453fe03610a7937ac805fa6
 SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread
 
 # Directories

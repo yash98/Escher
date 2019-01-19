@@ -1,8 +1,8 @@
 #include "Matrix.h"
 #include "Util.h"
 
-// #include <cblas.h>
-#include <mkl_cblas.h>
+#include <cblas.h>
+// #include <mkl_cblas.h>
 
 #include <fstream>
 #include <algorithm>
@@ -265,7 +265,7 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
 }
 int main() {
     // export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/
-    openblas_set_num_threads(2);
+    openblas_set_num_threads(4);
     Matrix input = Matrix("../a.txt", 3);
     Matrix kernel = Matrix("../b.txt", 3);
     Matrix result = input.convolution(kernel, true, Matrix::matrixMult);

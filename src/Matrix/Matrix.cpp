@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
-#include <pthread.h>
 
 Matrix::Matrix() {}
 
@@ -110,66 +109,17 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 
         return resultMatrix;
 
-
-    } else if (method == matrixMult) {
-        Matrix processedInput = Matrix();
-
-        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
-            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                std::vector<float> processedRow;
-                for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
-                    for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
-
-                        processedRow.push_back(
-                        matrix[i][j]);
-                    
-                    }
-                }
-
-                processedInput.matrix.push_back(processedRow);
-            }
-        }
-
-        // not column vector here for ease of coding
-        Matrix processedKernel = Matrix();
-        std::vector<float> actuallyColumnVector;
-
-        for (int i=kernel.matrix.size()-1; i>=0; i--) {
-            for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
-                actuallyColumnVector.push_back(kernel.matrix[i][j]);
-            }
-        }
-        processedKernel.matrix.push_back(actuallyColumnVector);
-
-        // multiply processedInput to kernel
-        Matrix resultMatrix = Matrix();
-        int counter = 0;
-        float sumOfProducts;
-        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
-            std::vector<float> resultRow;
-            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                sumOfProducts = 0.0;
-                for (int a=0; a<kernel.matrix.size()*kernel.matrix[0].size(); a++) {
-                    sumOfProducts += processedInput.matrix[counter][a]*processedKernel.matrix[0][a];
-                }
-                resultRow.push_back(sumOfProducts);
-                counter++;
-            }
-            resultMatrix.matrix.push_back(resultRow);
-        }
-
-        return resultMatrix;
-
-    } else if (method == matrixMultPthread) {
+    } else {
         int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
         int n = kernel.matrix.size()*kernel.matrix[0].size();
         int k = 1;
 
-        float processedInput[m][n];
+        float** processedInput = new float*[m];
         int count = 0;
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                processedInput[count] = new float[n];
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
 
@@ -182,23 +132,25 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         }
 
         // not column vector here for ease of coding
-        float processedKernel[n][k];
+        float* processedKernel = new float[n];
         count = 0;
         for (int i=kernel.matrix.size()-1; i>=0; i--) {
             for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
-                processedKernel[count][0] = kernel.matrix[i][j];
+                processedKernel[count] = kernel.matrix[i][j];
                 count++;
             }
         }
 
         // multiply processedInput to kernel
-        float resultArray [m][k];
+        float* resultArray = new float[m];
 
-        const float* a = &processedInput[0][0];
-        const float* b = &processedKernel[0][0];
-        float* c = &resultArray[0][0];
+        float* a = &processedInput[0][0];
+        float* bt = processedKernel;
+        float* ct = resultArray;
 
-        
+        if (method == Matrix::matrixMultPthread) {
+            Util::parallelizedMatrixTransVectorMult(a, bt, ct, m, n, numOfThreads);
+        }
 
         Matrix resultMatrix;
 
@@ -206,7 +158,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                resultRow.push_back(resultArray[count][0]);
+                resultRow.push_back(resultArray[count]);
                 count++;
             }
             resultMatrix.matrix.push_back(resultRow);

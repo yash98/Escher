@@ -69,7 +69,7 @@ std::vector<std::string> Util::split( std::string const& original, char separato
     return results;
 }
 
-void Util::parallelizedMatrixTransVectorMult(float* a, float* bt, float* c, 
+void Util::parallelizedMatrixTransVectorMult(float* a, float* bt, float* ct, 
 int m, int n, int numOfThreads) {
     // on heap so it can be accessed by threads
     int* tid = new int[numOfThreads];
@@ -86,7 +86,7 @@ int m, int n, int numOfThreads) {
 
         info[0] = a;
         info[1] = bt;
-        info[2] = c;
+        info[2] = ct;
         info[3] = new float(m);
         info[4] = new float(n);
         // tid[i]
@@ -108,18 +108,18 @@ void* Util::eachMatrixTransVectorMult(void* infoArray) {
     float** info = (float**) infoArray;
     float* a = info[0];
     float* bt = info[1];
-    float* c = info[2];
+    float* ct = info[2];
     int m = int(*info[3]);
     int n = int(*info[4]);
     int selfTID = int(*info[5]);
     int numOfThreads = int(*info[6]);
 
-    // FIXME: assuming b transpose given.
+    // FIXME: assuming b and c given as transpose.
     for (int i=selfTID; i<m; i+=(m/numOfThreads)) {
         float eachDotProduct = 0.0;
         for (int j=0; j<n; j++) {
             eachDotProduct += (*(a+(i*n)+j)) * (*(bt+j));
         }
-        *(c+i) = eachDotProduct;
+        *(ct+i) = eachDotProduct;
     }
 }

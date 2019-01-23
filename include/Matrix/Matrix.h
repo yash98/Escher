@@ -14,7 +14,7 @@ public:
     // enum majorOrder {};
 
     // OPTIONS FOR FUNCTIONS
-    enum convolMethod {simpleConvol, matrixMult};
+    enum convolMethod {simpleConvol, matrixMult, matrixMultPthread};
     enum nonLinearActMethod {relu, tanH, softmax, sigmoid};
     enum poolingMethod {maxPooling, avgPooling};
 
@@ -31,7 +31,7 @@ public:
     void checkConsistency();
 
     // FUNCTION MEMBERS
-    Matrix convolution(const Matrix& kernel, bool doPadding, convolMethod method);
+    Matrix convolution(const Matrix& kernel, bool doPadding, convolMethod method, int numOfThreads);
 
     void padding(int rowPad, int columnPad);
 

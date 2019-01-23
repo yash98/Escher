@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
+#include <pthread.h>
 
 Matrix::Matrix() {}
 
@@ -79,7 +80,7 @@ void Matrix::checkConsistency() {
     }
 }
 
-Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method, int numOfThreads) {
     if (doPadding) {
         this->padding(kernel.matrix.size(), kernel.matrix[0].size());
     }
@@ -153,6 +154,60 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
                 }
                 resultRow.push_back(sumOfProducts);
                 counter++;
+            }
+            resultMatrix.matrix.push_back(resultRow);
+        }
+
+        return resultMatrix;
+
+    } else if (method == matrixMultPthread) {
+        int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
+        int n = kernel.matrix.size()*kernel.matrix[0].size();
+        int k = 1;
+
+        float processedInput[m][n];
+        int count = 0;
+
+        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
+            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
+                    for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
+
+                        processedInput[count][i*kernel.matrix[0].size()+j]=matrix[i][j];
+                    
+                    }
+                }
+                count++;
+            }
+        }
+
+        // not column vector here for ease of coding
+        float processedKernel[n][k];
+        count = 0;
+        for (int i=kernel.matrix.size()-1; i>=0; i--) {
+            for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
+                processedKernel[count][0] = kernel.matrix[i][j];
+                count++;
+            }
+        }
+
+        // multiply processedInput to kernel
+        float resultArray [m][k];
+
+        const float* a = &processedInput[0][0];
+        const float* b = &processedKernel[0][0];
+        float* c = &resultArray[0][0];
+
+        
+
+        Matrix resultMatrix;
+
+        count = 0;
+        for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
+            std::vector<float> resultRow;
+            for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                resultRow.push_back(resultArray[count][0]);
+                count++;
             }
             resultMatrix.matrix.push_back(resultRow);
         }
@@ -296,7 +351,7 @@ int main (int argc, char* argv[]) {
             std::cerr << "Wrong convolMetod given." << std::endl;
             return -1;
         }
-        Matrix result = input.convolution(kernel, doPadding, method);
+        Matrix result = input.convolution(kernel, doPadding, method, 0);
         result.toOStream(std::cout);
     } else if (functionName == "pooling") {
         if (argc < 7) {

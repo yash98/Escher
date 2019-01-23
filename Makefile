@@ -8,6 +8,7 @@ CXX = g++
 # Remove warning and add -Wall Flag
 CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
 INCLUDE_FLAGS = -I include/
+SHARED_LINK_FLAGS = -lpthread
 
 DEBUG ?= 1
 ifeq ($(DEBUG), 1)
@@ -32,7 +33,7 @@ directories:
 
 # BIN/Executable Rules
 $(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Util.o
-	$(CXX) $^ -o $@
+	$(CXX) $^ -o $@ $(SHARED_LINK_FLAGS)
 
 # OBJ/object Rules
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp

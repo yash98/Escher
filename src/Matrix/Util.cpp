@@ -122,4 +122,6 @@ void* Util::eachMatrixTransVectorMult(void* infoArray) {
         }
         *(ct+i) = eachDotProduct;
     }
+    // nothing to return
+    return nullptr;
 }

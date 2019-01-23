@@ -13,6 +13,12 @@ namespace Util
     float Sigmoid(float num);
     void Softmax(std::vector<std::vector<float>>& vect);
     std::vector<std::string> split( std::string const& original, char separator );
+
+    // c = a*b^T, a is mxn, b is nx1 vector 
+    void parallelizedMatrixTransVectorMult(float* a, float* bt, float* c, 
+        int m, int n, int numOfThreads);
+
+    void* eachMatrixTransVectorMult(void* infoArray);
 };
 
 #endif /* UTIL_H */

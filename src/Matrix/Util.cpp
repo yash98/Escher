@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <pthread.h>
+#include <iostream>
 
 float Util::ReLu(float num){
     return (num > 0) ? num : 0.0;

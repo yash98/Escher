@@ -114,17 +114,16 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         int n = kernel.matrix.size()*kernel.matrix[0].size();
         int k = 1;
 
-        float** processedInput = new float*[m];
+        float* processedInput = new float[m*n];
         int count = 0;
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                processedInput[count] = new float[n];
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
+                        
+                        processedInput[count*n+i*kernel.matrix[0].size()+j]=matrix.at(i).at(j);
 
-                        processedInput[count][i*kernel.matrix[0].size()+j]=matrix[i][j];
-                    
                     }
                 }
                 count++;
@@ -144,7 +143,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         // multiply processedInput to kernel
         float* resultArray = new float[m];
 
-        float* a = &processedInput[0][0];
+        float* a = processedInput;
         float* bt = processedKernel;
         float* ct = resultArray;
 
@@ -163,9 +162,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
             }
             resultMatrix.matrix.push_back(resultRow);
         }
-        for (int i=0; i<m; i++) {
-            delete [] processedInput[i];
-        }
+        
         delete [] processedInput;
         delete [] processedKernel;
         delete [] resultArray;

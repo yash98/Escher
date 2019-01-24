@@ -77,7 +77,7 @@ int m, int n, int numOfThreads) {
     pthread_t multThreads[numOfThreads];
 
     for (int i = 0; i < numOfThreads; i ++) {
-        float** info = new float*[8];
+        float** info = new float*[7];
         // float* fm = new float(m);
         // float* fn = new float(n);
         // float* fk = new float(k);
@@ -115,7 +115,7 @@ void* Util::eachMatrixTransVectorMult(void* infoArray) {
     int numOfThreads = int(*info[6]);
 
     // FIXME: assuming b and c given as transpose.
-    for (int i=selfTID; i<m; i+=(m/numOfThreads)) {
+    for (int i=selfTID; i<m; i+=(numOfThreads)) {
         float eachDotProduct = 0.0;
         for (int j=0; j<n; j++) {
             eachDotProduct += (*(a+(i*n)+j)) * (*(bt+j));

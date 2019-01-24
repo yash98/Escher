@@ -12,7 +12,7 @@ Format of any command:
 
 ### Function Names
 - #### convolution   
-    **Ex:** `./matrix convolution input.txt numRowsOfInput kernel.txt numRowsOfKernel pad matrixMult`  
+    **Ex:** `./matrix convolution input.txt numRowsOfInput kernel.txt numRowsOfKernel pad matrixMultPthread numOfThreads`  
 
     *arguments:*   
     2. input file   
@@ -20,7 +20,8 @@ Format of any command:
     4. kernel file  
     5. number of rows in kernel    
     6. write `pad` - for applying enough padding to keep image size maintained. `noPad` - to apply no padding     
-    7. method of convolutions: simpleConvol, matrixMult 
+    7. method of convolutions: simpleConvol, matrixMultPthread     
+    8. number of threads to be used for pthread or blas implementations
 
 - #### pooling
     **Ex:** `./matrix pooling input.txt numRowsofInput maxpool poolingSize`

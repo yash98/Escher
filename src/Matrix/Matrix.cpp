@@ -278,7 +278,7 @@ int main (int argc, char* argv[]) {
     }
     std::string functionName = argv[1];
     if (functionName == "convolution") {
-        if (argc < 8) {
+        if (argc < 9) {
             std::cerr << "Number of args incorrect." << std::endl;
             return -1;
         }
@@ -297,13 +297,13 @@ int main (int argc, char* argv[]) {
         Matrix::convolMethod method;
         if (std::string(argv[7]) == "simpleConvol") {
             method = Matrix::simpleConvol;
-        } else if (std::string(argv[7]) == "matrixMult") {
-            method = Matrix::matrixMult;
+        } else if (std::string(argv[7]) == "matrixMultPthread") {
+            method = Matrix::matrixMultPthread;
         } else {
             std::cerr << "Wrong convolMetod given." << std::endl;
             return -1;
         }
-        Matrix result = input.convolution(kernel, doPadding, method, 0);
+        Matrix result = input.convolution(kernel, doPadding, method, atoi(argv[8]));
         result.toOStream(std::cout);
     } else if (functionName == "pooling") {
         if (argc < 7) {

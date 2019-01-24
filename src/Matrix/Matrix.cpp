@@ -163,6 +163,10 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
             }
             resultMatrix.matrix.push_back(resultRow);
         }
+        
+        delete [] processedInput;
+        delete [] processedKernel;
+        delete [] resultArray;
 
         return resultMatrix;
     }

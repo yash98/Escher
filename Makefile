@@ -8,14 +8,15 @@ CXX = g++
 # Remove warning and add -Wall Flag
 
 CXX_ASSEMBLER_FLAGS := $(ADD_G++_FLAGS) 
+
 INCLUDE_FLAGS = -I include/ -I /opt/OpenBLAS/include/ 
+SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
     CXX_ASSEMBLER_FLAGS +=-g
 endif
 
-SHARED_LINK_FLAGS = -L/opt/OpenBLAS/lib -lopenblas -lpthread
 
 # Directories
 SRC_DIR = src

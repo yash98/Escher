@@ -4,9 +4,6 @@
 #include <cblas.h>
 // #include <mkl_cblas.h>
 
-#include <cblas.h>
-// #include <mkl_cblas.h>`
-
 #include <fstream>
 #include <algorithm>
 #include <iostream>
@@ -85,7 +82,7 @@ void Matrix::checkConsistency() {
     }
 }
 
-Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method, int numOfThreads) {
     if (doPadding) {
         this->padding(kernel.matrix.size(), kernel.matrix[0].size());
     }
@@ -115,22 +112,21 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 
         return resultMatrix;
 
-
-    } else if (method == matrixMultBLAS) {
+    } else {
         int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
         int n = kernel.matrix.size()*kernel.matrix[0].size();
         int k = 1;
 
-        float processedInput[m][n];
+        float* processedInput = new float[m*n];
         int count = 0;
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
+                        
+                        processedInput[count*n+i*kernel.matrix[0].size()+j]=matrix.at(i).at(j);
 
-                        processedInput[count][i*kernel.matrix[0].size()+j]=matrix[i][j];
-                    
                     }
                 }
                 count++;
@@ -138,25 +134,25 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         }
 
         // not column vector here for ease of coding
-        float processedKernel[n][k];
+        float* processedKernel = new float[n];
         count = 0;
         for (int i=kernel.matrix.size()-1; i>=0; i--) {
             for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
-                processedKernel[count][0] = kernel.matrix[i][j];
+                processedKernel[count] = kernel.matrix[i][j];
                 count++;
             }
         }
 
         // multiply processedInput to kernel
-        float resultArray [m][k];
+        float* resultArray = new float[m];
 
-        const float* a = &processedInput[0][0];
-        const float* b = &processedKernel[0][0];
-        float* c = &resultArray[0][0];
+        float* a = processedInput;
+        float* bt = processedKernel;
+        float* ct = resultArray;
 
-        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
-            m, n, k, 
-            1.0, a, k, b, n, 0.0, c, n);
+        if (method == Matrix::matrixMultPthread) {
+            Util::parallelizedMatrixTransVectorMult(a, bt, ct, m, n, numOfThreads);
+        }
 
         Matrix resultMatrix;
 
@@ -164,11 +160,15 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                resultRow.push_back(resultArray[count][0]);
+                resultRow.push_back(resultArray[count]);
                 count++;
             }
             resultMatrix.matrix.push_back(resultRow);
         }
+        
+        delete [] processedInput;
+        delete [] processedKernel;
+        delete [] resultArray;
 
         return resultMatrix;
     }
@@ -284,7 +284,7 @@ int main (int argc, char* argv[]) {
     }
     std::string functionName = argv[1];
     if (functionName == "convolution") {
-        if (argc < 8) {
+        if (argc < 9) {
             std::cerr << "Number of args incorrect." << std::endl;
             return -1;
         }
@@ -303,13 +303,13 @@ int main (int argc, char* argv[]) {
         Matrix::convolMethod method;
         if (std::string(argv[7]) == "simpleConvol") {
             method = Matrix::simpleConvol;
-        } else if (std::string(argv[7]) == "matrixMult") {
-            method = Matrix::matrixMult;
+        } else if (std::string(argv[7]) == "matrixMultPthread") {
+            method = Matrix::matrixMultPthread;
         } else {
             std::cerr << "Wrong convolMetod given." << std::endl;
             return -1;
         }
-        Matrix result = input.convolution(kernel, doPadding, method);
+        Matrix result = input.convolution(kernel, doPadding, method, atoi(argv[8]));
         result.toOStream(std::cout);
     } else if (functionName == "pooling") {
         if (argc < 7) {

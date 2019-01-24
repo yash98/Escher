@@ -3,6 +3,9 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <pthread.h>
+#include <iostream>
+
 float Util::ReLu(float num){
     return (num > 0) ? num : 0.0;
 }
@@ -65,4 +68,63 @@ std::vector<std::string> Util::split( std::string const& original, char separato
     }
     results.push_back( std::string( start, next ) );
     return results;
+}
+
+void Util::parallelizedMatrixTransVectorMult(float* a, float* bt, float* ct, 
+int m, int n, int numOfThreads) {
+    // on heap so it can be accessed by threads
+    int* tid = new int[numOfThreads];
+    
+    pthread_t multThreads[numOfThreads];
+
+    for (int i = 0; i < numOfThreads; i ++) {
+        float** info = new float*[7];
+        // float* fm = new float(m);
+        // float* fn = new float(n);
+        // float* fk = new float(k);
+
+        tid[i] = i;
+
+        info[0] = a;
+        info[1] = bt;
+        info[2] = ct;
+        info[3] = new float(m);
+        info[4] = new float(n);
+        // tid[i]
+        info[5] = new float(i);
+        info[6] = new float(numOfThreads);
+        
+        pthread_create(&multThreads[i], NULL, Util::eachMatrixTransVectorMult, info);
+    }
+
+    for (int i = 0; i < numOfThreads; i ++) {
+        pthread_join(multThreads[i], NULL);
+    }
+
+    delete [] tid;
+}
+
+void* Util::eachMatrixTransVectorMult(void* infoArray) {
+    // get correct type of everything
+    float** info = (float**) infoArray;
+    float* a = info[0];
+    float* bt = info[1];
+    float* ct = info[2];
+    int m = int(*info[3]);
+    int n = int(*info[4]);
+    int selfTID = int(*info[5]);
+    int numOfThreads = int(*info[6]);
+
+    // FIXME: assuming b and c given as transpose.
+    for (int i=selfTID; i<m; i+=(numOfThreads)) {
+        float eachDotProduct = 0.0;
+        for (int j=0; j<n; j++) {
+            eachDotProduct += (*(a+(i*n)+j)) * (*(bt+j));
+        }
+        *(ct+i) = eachDotProduct;
+    }
+
+    delete [] info;
+    // nothing to return
+    return nullptr;
 }

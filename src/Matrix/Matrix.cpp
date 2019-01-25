@@ -124,16 +124,13 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
-                        
-                        processedInput[count*n+i*kernel.matrix[0].size()+j]=matrix.at(i).at(j);
-
+                        processedInput[count]=matrix[i][j];
+                        count++;
                     }
                 }
-                count++;
             }
         }
 
-        // not column vector here for ease of coding
         float* processedKernel = new float[n];
         count = 0;
         for (int i=kernel.matrix.size()-1; i>=0; i--) {
@@ -144,7 +141,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         }
 
         // multiply processedInput to kernel
-        float* resultArray = new float[m];
+        float* resultArray = new float[m]; 
 
         float* a = processedInput;
         float* bt = processedKernel;
@@ -152,6 +149,10 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 
         if (method == Matrix::matrixMultPthread) {
             Util::parallelizedMatrixTransVectorMult(a, bt, ct, m, n, numOfThreads);
+        } else if (method == Matrix::matrixMultBLAS) {
+            cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 
+            m, n, k, 
+            1.0, a, k, bt, n, 0.0, ct, n);
         }
 
         Matrix resultMatrix;
@@ -160,6 +161,7 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
+                std::cout << resultArray[count] << std::endl; 
                 resultRow.push_back(resultArray[count]);
                 count++;
             }
@@ -305,6 +307,8 @@ int main (int argc, char* argv[]) {
             method = Matrix::simpleConvol;
         } else if (std::string(argv[7]) == "matrixMultPthread") {
             method = Matrix::matrixMultPthread;
+        } else if (std::string(argv[7]) == "matrixMultBLAS") {
+            method = Matrix::matrixMultBLAS;
         } else {
             std::cerr << "Wrong convolMetod given." << std::endl;
             return -1;

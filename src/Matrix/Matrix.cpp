@@ -356,6 +356,3 @@ int main (int argc, char* argv[]) {
         return -1;
     }
 }
-// export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
-// export MKLROOT=/opt/intel/mkl
-// export OPENBLASROOT=/opt/OpenBLAS

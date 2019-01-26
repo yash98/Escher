@@ -56,8 +56,6 @@ For cleaning object files and executables: `make clean`
 ## Environment Variables
 Set all variables stated below according to your configurations.    
 
-    
-
 ```
 export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
 export MKLROOT=/opt/intel/mkl

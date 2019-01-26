@@ -143,16 +143,12 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         // multiply processedInput to kernel
         float* resultArray = new float[m]; 
 
-        float* a = processedInput;
-        float* bt = processedKernel;
-        float* ct = resultArray;
-
         if (method == Matrix::matrixMultPthread) {
-            Util::parallelizedMatrixTransVectorMult(a, bt, ct, m, n, numOfThreads);
+            Util::parallelizedMatrixTransVectorMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
         } else if (method == Matrix::matrixMultBLAS) {
-            cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 
-            m, n, k, 
-            1.0, a, k, bt, n, 0.0, ct, n);
+            cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
+            m, 1, n, 
+            1.0, processedInput, n, processedKernel, 1, 0.0, resultArray, 1);
         }
 
         Matrix resultMatrix;
@@ -161,7 +157,6 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                std::cout << resultArray[count] << std::endl; 
                 resultRow.push_back(resultArray[count]);
                 count++;
             }

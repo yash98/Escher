@@ -20,7 +20,7 @@ Format of any command:
     4. kernel file  
     5. number of rows in kernel    
     6. write `pad` - for applying enough padding to keep image size maintained. `noPad` - to apply no padding     
-    7. method of convolutions: simpleConvol, matrixMultPthread     
+    7. method of convolutions: simpleConvol, matrixMultPthread, matrixMultOpenBLAS, matrixMKL   
     8. number of threads to be used for pthread or blas implementations
 
 - #### pooling
@@ -40,11 +40,6 @@ Format of any command:
     3. number of rows in input file     
     4. type of activation function: `relu`, `tanH`, `sigmoid`, `softmax`
 
-## Compiling
-For simple compiling: `make`   
-For debugging: `make DEBUG=1`    
-For cleaning object files and executables: `make clean`  
-
 ## Input files format
 Space separated floats. No space before end of line.
 Column Major order
@@ -53,3 +48,22 @@ Column Major order
 0.1 0.4 0.7
 2.0 5.0 0.8
 ```
+## Compiling
+For simple compiling: `make`   
+For debugging: `make DEBUG=1`    
+For cleaning object files and executables: `make clean`  
+
+## Environment Variables
+Set all variables stated below according to your configurations.    
+
+    
+
+```
+export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
+export MKLROOT=/opt/intel/mkl
+export OPENBLASROOT=/opt/OpenBLAS
+```     
+
+1. LD_LIBRARY_PATH   
+2. MKLROOT   
+3. OPENBLASROOT  

@@ -1,8 +1,5 @@
-#include "../include/Matrix/Matrix.h"
-#include "../include/Matrix/Util.h"
-
-#include <cblas.h>
-// #include <mkl_cblas.h>
+#include "../../include/Matrix/Matrix.h"
+#include "../../include/Matrix/Util.h"
 
 #include <fstream>
 #include <algorithm>
@@ -144,11 +141,15 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
         float* resultArray = new float[m]; 
 
         if (method == Matrix::matrixMultPthread) {
-            Util::parallelizedMatrixTransVectorMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
-        } else if (method == Matrix::matrixMultBLAS) {
-            cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
-            m, 1, n, 
-            1.0, processedInput, n, processedKernel, 1, 0.0, resultArray, 1);
+            Util::parallelizedMatrixTransVectorMult(processedInput, processedKernel, 
+                resultArray, m, n, numOfThreads);
+        } else if (method == Matrix::matrixMultOpenBLAS) {
+            openblasMatrixMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
+        } else if (method == Matrix::matrixMultMKL) {
+            mklMatrixMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
+        } else {
+            std::cerr << "method: " << method << std::endl;
+            throw std::invalid_argument("Wrong convolMethod passed to function.");
         }
 
         Matrix resultMatrix;
@@ -302,10 +303,12 @@ int main (int argc, char* argv[]) {
             method = Matrix::simpleConvol;
         } else if (std::string(argv[7]) == "matrixMultPthread") {
             method = Matrix::matrixMultPthread;
-        } else if (std::string(argv[7]) == "matrixMultBLAS") {
-            method = Matrix::matrixMultBLAS;
+        } else if (std::string(argv[7]) == "matrixMultOpenBLAS") {
+            method = Matrix::matrixMultOpenBLAS;
+        } else if (std::string(argv[7]) == "matrixMultMKL") {
+            method = Matrix::matrixMultMKL;
         } else {
-            std::cerr << "Wrong convolMetod given." << std::endl;
+            std::cerr << "Wrong convolMethod given." << std::endl;
             return -1;
         }
         Matrix result = input.convolution(kernel, doPadding, method, atoi(argv[8]));
@@ -353,11 +356,6 @@ int main (int argc, char* argv[]) {
         return -1;
     }
 }
-// int main() {
-//     // export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/
-//     openblas_set_num_threads(4);
-//     Matrix input = Matrix("../a.txt", 3);
-//     Matrix kernel = Matrix("../b.txt", 3);
-//     Matrix result = input.convolution(kernel, true, Matrix::matrixMult);
-//     result.toOStream(std::cout);
-// }
+// export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
+// export MKLROOT=/opt/intel/mkl
+// export OPENBLASROOT=/opt/OpenBLAS

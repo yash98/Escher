@@ -1,5 +1,5 @@
-#include "../include/Matrix/Matrix.h"
-#include "../include/Matrix/Util.h"
+#include "../../include/Matrix/Matrix.h"
+#include "../../include/Matrix/Util.h"
 
 #include <fstream>
 #include <algorithm>
@@ -79,7 +79,7 @@ void Matrix::checkConsistency() {
     }
 }
 
-Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method) {
+Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolMethod method, int numOfThreads) {
     if (doPadding) {
         this->padding(kernel.matrix.size(), kernel.matrix[0].size());
     }
@@ -109,53 +109,64 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 
         return resultMatrix;
 
+    } else {
+        int m = (matrix.size()-kernel.matrix.size()+1)*(matrix[0].size()-kernel.matrix[0].size()+1);
+        int n = kernel.matrix.size()*kernel.matrix[0].size();
+        int k = 1;
 
-    } else if (method == matrixMult) {
-        Matrix processedInput = Matrix();
+        float* processedInput = new float[m*n];
+        int count = 0;
 
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                std::vector<float> processedRow;
                 for (int i=x; i<=kernel.matrix.size()-1+x; i++) {
                     for (int j=y; j<=kernel.matrix[0].size()-1+y; j++) {
-
-                        processedRow.push_back(
-                        matrix[i][j]);
-                    
+                        processedInput[count]=matrix[i][j];
+                        count++;
                     }
                 }
-
-                processedInput.matrix.push_back(processedRow);
             }
         }
 
-        // not column vector here for ease of coding
-        Matrix processedKernel = Matrix();
-        std::vector<float> actuallyColumnVector;
-
+        float* processedKernel = new float[n];
+        count = 0;
         for (int i=kernel.matrix.size()-1; i>=0; i--) {
             for (int j=kernel.matrix[0].size()-1; j>=0; j--) {
-                actuallyColumnVector.push_back(kernel.matrix[i][j]);
+                processedKernel[count] = kernel.matrix[i][j];
+                count++;
             }
         }
-        processedKernel.matrix.push_back(actuallyColumnVector);
 
         // multiply processedInput to kernel
-        Matrix resultMatrix = Matrix();
-        int counter = 0;
-        float sumOfProducts;
+        float* resultArray = new float[m]; 
+
+        if (method == Matrix::matrixMultPthread) {
+            Util::parallelizedMatrixTransVectorMult(processedInput, processedKernel, 
+                resultArray, m, n, numOfThreads);
+        } else if (method == Matrix::matrixMultOpenBLAS) {
+            openblasMatrixMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
+        } else if (method == Matrix::matrixMultMKL) {
+            mklMatrixMult(processedInput, processedKernel, resultArray, m, n, numOfThreads);
+        } else {
+            std::cerr << "method: " << method << std::endl;
+            throw std::invalid_argument("Wrong convolMethod passed to function.");
+        }
+
+        Matrix resultMatrix;
+
+        count = 0;
         for (int x=0; x<matrix.size()-kernel.matrix.size()+1; x++) {
             std::vector<float> resultRow;
             for (int y=0; y<matrix[0].size()-kernel.matrix[0].size()+1; y++) {
-                sumOfProducts = 0.0;
-                for (int a=0; a<kernel.matrix.size()*kernel.matrix[0].size(); a++) {
-                    sumOfProducts += processedInput.matrix[counter][a]*processedKernel.matrix[0][a];
-                }
-                resultRow.push_back(sumOfProducts);
-                counter++;
+                resultRow.push_back(resultArray[count]);
+                count++;
             }
             resultMatrix.matrix.push_back(resultRow);
         }
+        
+        delete [] processedInput;
+        delete [] processedKernel;
+        delete [] resultArray;
 
         return resultMatrix;
     }
@@ -271,7 +282,7 @@ int main (int argc, char* argv[]) {
     }
     std::string functionName = argv[1];
     if (functionName == "convolution") {
-        if (argc < 8) {
+        if (argc < 9) {
             std::cerr << "Number of args incorrect." << std::endl;
             return -1;
         }
@@ -290,13 +301,17 @@ int main (int argc, char* argv[]) {
         Matrix::convolMethod method;
         if (std::string(argv[7]) == "simpleConvol") {
             method = Matrix::simpleConvol;
-        } else if (std::string(argv[7]) == "matrixMult") {
-            method = Matrix::matrixMult;
+        } else if (std::string(argv[7]) == "matrixMultPthread") {
+            method = Matrix::matrixMultPthread;
+        } else if (std::string(argv[7]) == "matrixMultOpenBLAS") {
+            method = Matrix::matrixMultOpenBLAS;
+        } else if (std::string(argv[7]) == "matrixMultMKL") {
+            method = Matrix::matrixMultMKL;
         } else {
-            std::cerr << "Wrong convolMetod given." << std::endl;
+            std::cerr << "Wrong convolMethod given." << std::endl;
             return -1;
         }
-        Matrix result = input.convolution(kernel, doPadding, method);
+        Matrix result = input.convolution(kernel, doPadding, method, atoi(argv[8]));
         result.toOStream(std::cout);
     } else if (functionName == "pooling") {
         if (argc < 7) {
@@ -341,3 +356,6 @@ int main (int argc, char* argv[]) {
         return -1;
     }
 }
+// export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
+// export MKLROOT=/opt/intel/mkl
+// export OPENBLASROOT=/opt/OpenBLAS

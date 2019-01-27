@@ -28,14 +28,19 @@ OUTPUT_DIR = $(OBJ_DIR)/Matrix $(BIN_DIR)
 .PHONY: all
 all:
 	make directories
-	make $(BIN_DIR)/matrix
+	make $(BIN_DIR)/data
 
 .PHONY: directories
 directories:
 	mkdir -p $(OUTPUT_DIR)
 
 # BIN/Executable Rules
+# matrix library exec
 $(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
+	$(CXX) $^ -o $@ $(SHARED_LINK_FLAGS)
+
+#  
+$(BIN_DIR)/data: $(OBJ_DIR)/Matrix/data_store.o $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@ $(SHARED_LINK_FLAGS)
 
 # OBJ/object Rules

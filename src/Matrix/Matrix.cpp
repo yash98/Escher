@@ -274,7 +274,7 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
     }
 }
 
-int main (int argc, char* argv[]) {
+int main1 (int argc, char* argv[]) {
     //  ./yourcode.out convolution_withpadding_matrixmult padsize matrix1.txt matrix1_numrows matrix2.txt matrix2_numrows
     if (argc<2) {
         std::cerr << "No args provided. Check README.md for usage." << std::endl;

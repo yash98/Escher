@@ -24,7 +24,7 @@ float std_deviation(float arr[], int size){
 	return std_dev;
 }
 
-int main(){
+void Matrix::data_store(){
 	// first randomly generate kernel and images
 	int min_image_size, max_image_size;
 	int kernel_size;
@@ -97,5 +97,4 @@ int main(){
 
 	}
 	myfile.close();
-	return 0;
 }

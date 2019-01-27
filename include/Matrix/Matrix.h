@@ -44,6 +44,8 @@ public:
     void mklMatrixMult(float* a, float* b, float* c, 
         int m, int n, int numOfThreads);
 
+    static void data_store();
+
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:
     static void splitColumnMajorAndPushBackRowMajor(std::string const& original, 

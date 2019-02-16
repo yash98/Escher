@@ -218,14 +218,14 @@ void Matrix::nonLinearActivation(Matrix::nonLinearActMethod method) {
 }
 
 
-Matrix Matrix::pooling(Matrix::poolingMethod method, int num_rows, int num_columns) {
+Matrix Matrix::pooling(Matrix::poolingMethod method, int num_rows, int num_columns, int stride) {
     int m = this->matrix.size();
     int n = this->matrix[0].size();
     std::vector<std::vector<float> > M;
     M.reserve(m-num_rows+1);
-    for(int i=0;i<m-num_rows+1;i++){
+    for(int i=0;i<m-num_rows+1;i+=stride){
         std::vector<float> rowOfM;
-        for(int j=0;j<n-num_columns+1;j++){
+        for(int j=0;j<n-num_columns+1;j+=stride){
             rowOfM.reserve(n-num_columns+1);
             if(method == maxPooling){
                 float ret = std::numeric_limits<float>::min();

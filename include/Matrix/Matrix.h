@@ -37,7 +37,7 @@ public:
 
     void nonLinearActivation(nonLinearActMethod method);
 
-    Matrix pooling(poolingMethod method, int num_rows, int num_columns);
+    Matrix pooling(poolingMethod method, int num_rows, int num_columns, int stride);
 
     void openblasMatrixMult(float* a, float* b, float* c, 
         int m, int n, int numOfThreads);

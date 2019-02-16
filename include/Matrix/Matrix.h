@@ -44,11 +44,13 @@ public:
     void mklMatrixMult(float* a, float* b, float* c, 
         int m, int n, int numOfThreads);
 
-    static void data_store();
-
     void addMatrixInto(Matrix& other);
 
     void addIntInto(int givenInt);
+
+    Matrix zeroes(int rows, int columns);
+
+    static void data_store();
 
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:

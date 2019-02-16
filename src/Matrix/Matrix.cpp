@@ -274,3 +274,26 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
     }
 }
 
+void Matrix::addMatrixInto(Matrix& other) {
+    if ((matrix.size()==other.matrix.size()) && (matrix[0].size()==other.matrix[0].size())) {
+        for (int i=0; i<matrix.size(); i++) {
+            for (int j=0; j<matrix[0].size(); j++) {
+                matrix[i][j] += other.matrix[i][j];
+            }
+        }
+    } else {
+        throw std::invalid_argument("addMatrixInto: matrix size mismatch");
+    }
+}
+
+void Matrix::addIntInto(int givenInt) {
+    for (int i=0; i<matrix.size(); i++) {
+        for (int j=0; j<matrix[0].size(); j++) {
+            matrix[i][j] += givenInt;
+        }
+    }
+}
+
+Matrix Matrix::zeroes(int rows, int columns) {
+    return Matrix(std::vector<std::vector<float>>(rows, std::vector<float>(columns)));
+}

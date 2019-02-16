@@ -24,13 +24,14 @@ Format of any command:
     8. number of threads to be used for pthread or blas implementations
 
 - #### pooling
-    **Ex:** `./matrix pooling input.txt numRowsofInput maxpool poolingSize`
+    **Ex:** `./matrix pooling input.txt numRowsofInput maxpool poolingSize stride`
 
     *arguments:*    
     2. input file   
     3. number of rows in input file     
     4. type of pooling. `avgpool` - to apply average pooling `maxpool` - to apply max pooling   
     5. size of pooling 
+    6. stride
 
 - #### nonLinearActivation
     **Ex:** `./matrix nonLinearActivation input.txt numRowsofInput relu`

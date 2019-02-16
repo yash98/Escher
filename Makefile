@@ -39,11 +39,11 @@ directories:
 
 # BIN/Executable Rules
 # digit exec
-$(BIN_DIR)/digit: $(OBJ_DIR)/DigitRecognition/DigitRecog.o $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/data_store.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
+$(BIN_DIR)/digit: $(OBJ_DIR)/DigitRecognition/main.o $(OBJ_DIR)/DigitRecognition/DigitRecog.o $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/data_store.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@ $(DIGIT_SHARED_LINK_FLAGS)
 
 # matrix library exec
-$(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/data_store.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
+$(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/main.o $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR)/Matrix/data_store.o $(OBJ_DIR)/Matrix/Matrix_MKL.o $(OBJ_DIR)/Matrix/Matrix_OpenBLAS.o $(OBJ_DIR)/Matrix/Util.o
 	$(CXX) $^ -o $@ $(MAT_SHARED_LINK_FLAGS)
 
 # digit OBJ Rules

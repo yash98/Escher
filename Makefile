@@ -47,8 +47,11 @@ $(BIN_DIR)/matrix: $(OBJ_DIR)/Matrix/main.o $(OBJ_DIR)/Matrix/Matrix.o $(OBJ_DIR
 	$(CXX) $^ -o $@ $(MAT_SHARED_LINK_FLAGS)
 
 # digit OBJ Rules
-$(OBJ_DIR)/DigitRecognition/%.o: $(SRC_DIR)/DigitRecognition/%.cpp
+$(OBJ_DIR)/DigitRecognition/DigitRecog.o: $(SRC_DIR)/DigitRecognition/DigitRecog.cpp
 	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@ $(DIGIT_INCLUDE_FLAGS)
+
+$(OBJ_DIR)/DigitRecognition/%.o: $(SRC_DIR)/DigitRecognition/%.cpp
+	$(CXX) $(CXX_ASSEMBLER_FLAGS) -c $^ -o $@ -Iinclude/
 
 # MAT OBJ Rules
 $(OBJ_DIR)/Matrix/Matrix_MKL.o: $(SRC_DIR)/Matrix/Matrix_MKL.cpp

@@ -46,7 +46,9 @@ public:
 
     static void data_store();
 
-    int matrixMain (int argc, char* argv[]);
+    void addMatrixInto(Matrix& other);
+
+    void addIntInto(int givenInt);
 
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:

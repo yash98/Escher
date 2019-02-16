@@ -47,7 +47,8 @@ Matrix::convolMethod method, int numThreads) {
 
     // 3d convol = convol and sum together
     for (int i=0; i<numOfFilters; i++) {
-        Matrix accumulatorMatrix = Matrix::zeroes(inputChannel[0].matrix.size(), inputChannel[0].matrix[0].size());
+        Matrix accumulatorMatrix = Matrix::zeroes(inputChannel[0].matrix.size()-squareKernelSide+1, 
+            inputChannel[0].matrix[0].size()-squareKernelSide+1);
         for (int j=0; j<inputChannel.size(); j++) {
             Matrix& eachInputMatrix = inputChannel[j];
 
@@ -149,7 +150,7 @@ std::vector<std::string> parameterFileNames, Matrix::convolMethod convMethod, in
         return std::get<1>(t1) > std::get<1>(t2);} // descending order sort 
         );
 
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<5; i++) {
         toThisOStream << std::get<0>(probabilityPairVector[i]) << ": " 
         << std::get<1>(probabilityPairVector[i]) << std::endl;
     }

@@ -8,12 +8,13 @@
 #include <ostream>
 
 namespace DigitRecog {
-    Matrix pngToMatrix(std::string filename);
-    void recognizeDigit(std::string filename, std::ostream& toThisOStream);
+    Matrix pngToMatrix(std::string imgFileName);
+    void recognizeDigit(std::string imgFileName, std::ostream& toThisOStream, 
+        std::vector<std::string> parameterFileNames);
     std::vector<Matrix> convLayer(std::vector<Matrix> inputChannel, 
         int squareKernelSide, int numOfFilters, std::string parameterFileName, 
         Matrix::convolMethod method, int numThreads);
-    std::vector<Matrix> maxPoolLayer(std::vector<Matrix> inputChannel, int stride);
+    std::vector<Matrix> maxPoolLayer(std::vector<Matrix> inputChannel, int stride, int squarePoolsize);
     std::vector<Matrix> reluLayer(std::vector<Matrix> inputChannel);
 };
 

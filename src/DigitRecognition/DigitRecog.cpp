@@ -7,8 +7,8 @@
 #include <iostream>
 #include <fstream>
 
-Matrix DigitRecog::pngToMatrix(std::string filename) {
-    cv::Mat img = cv::imread(filename, cv::IMREAD_GRAYSCALE);
+Matrix DigitRecog::pngToMatrix(std::string imgFileName) {
+    cv::Mat img = cv::imread(imgFileName, cv::IMREAD_GRAYSCALE);
     if ((img.cols != 28) || (img.rows != 28)) {
         cv::Mat tempImg;
         cv::resize(img, tempImg, cv::Size(28,28));
@@ -33,7 +33,7 @@ Matrix DigitRecog::pngToMatrix(std::string filename) {
     return m;
 }
 
-std::vector<Matrix> convLayer(std::vector<Matrix> inputChannel, 
+std::vector<Matrix> DigitRecog::convLayer(std::vector<Matrix> inputChannel, 
 int squareKernelSide, int numOfFilters, std::string parameterFileName, 
 Matrix::convolMethod method, int numThreads) {
 
@@ -77,6 +77,30 @@ Matrix::convolMethod method, int numThreads) {
     return outputChannel;
 }
 
-int main (int agrc, char* argv[]) {
-    DigitRecog::pngToMatrix("../1/1.png");
+std::vector<Matrix> DigitRecog::maxPoolLayer(std::vector<Matrix> inputChannel, int stride, int squarePoolsize) {
+    std::vector<Matrix> outputChannel;
+    outputChannel.reserve(inputChannel.size());
+
+    for (Matrix eachInputMatrix: inputChannel) {
+        outputChannel.push_back(eachInputMatrix.pooling(Matrix::maxPooling, squarePoolsize, squarePoolsize, stride));
+    }
+    return outputChannel;
+}
+
+std::vector<Matrix> DigitRecog::reluLayer(std::vector<Matrix> inputChannel) {
+    std::vector<Matrix> outputChannel;
+    outputChannel.reserve(inputChannel.size());
+
+    for (Matrix eachInputMatrix: inputChannel) {
+        eachInputMatrix.nonLinearActivation(Matrix::relu);
+        // deepcopy the matrix with result
+        // nonLinearActivation returns void i.e inplace
+        outputChannel.push_back(eachInputMatrix.copy());
+    }
+    return outputChannel;
+}
+
+void DigitRecog::recognizeDigit(std::string imgFileName, std::ostream& toThisOStream, 
+std::vector<std::string> parameterFileNames) {
+
 }

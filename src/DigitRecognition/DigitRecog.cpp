@@ -31,7 +31,7 @@ Matrix DigitRecog::pngToMatrix(std::string imgFileName) {
         imgVector.push_back(rowOfImgVector);
     }
     
-    Matrix m = Matrix::Matrix(imgVector);
+    Matrix m = Matrix(imgVector);
     return m;
 }
 
@@ -61,7 +61,7 @@ Matrix::convolMethod method, int numThreads) {
                     kernelVec[l][k] = stof(line);
                 }
             }
-            Matrix kernel = Matrix::Matrix(kernelVec);
+            Matrix kernel = Matrix(kernelVec);
             Matrix resultMatrix = eachInputMatrix.convolution(kernel, false, method, numThreads);
             accumulatorMatrix.addMatrixInto(resultMatrix);
         }
@@ -104,45 +104,39 @@ std::vector<Matrix> DigitRecog::reluLayer(std::vector<Matrix>& inputChannel) {
 
 void DigitRecog::recognizeDigit(std::string imgFileName, std::ostream& toThisOStream, 
 std::vector<std::string> parameterFileNames, Matrix::convolMethod convMethod, int numThreads) {
-    std::vector<Matrix>* inputChannel = &(std::vector<Matrix>(0));
-    std::vector<Matrix>* outputChannel;
-    inputChannel->push_back(pngToMatrix(imgFileName));
+    std::vector<Matrix> channel1;
+    std::vector<Matrix> channel2;
+    channel1.push_back(pngToMatrix(imgFileName));
 
     // Conv_1
-    outputChannel = &(convLayer(*inputChannel, 5, 20, parameterFileNames[0], convMethod, numThreads));
-    inputChannel = outputChannel;
+    channel2 = convLayer(channel1, 5, 20, parameterFileNames[0], convMethod, numThreads);
 
     // Pool_1
-    outputChannel = &(maxPoolLayer(*inputChannel, 2, 2));
-    inputChannel = outputChannel;
+    channel1 = maxPoolLayer(channel2, 2, 2);
 
     // Conv_2
-    outputChannel = &(convLayer(*inputChannel, 5, 50, parameterFileNames[1], convMethod, numThreads));
-    inputChannel = outputChannel;
+    channel2 = convLayer(channel1, 5, 50, parameterFileNames[1], convMethod, numThreads);
 
     // Pool_2
-    outputChannel = &(maxPoolLayer(*inputChannel, 2, 2));
-    inputChannel = outputChannel;
+    channel1 = maxPoolLayer(channel2, 2, 2);
 
     // FC_1
-    outputChannel = &(convLayer(*inputChannel, 4, 500, parameterFileNames[2], convMethod, numThreads));
-    inputChannel = outputChannel;
+    channel2 = convLayer(channel1, 4, 500, parameterFileNames[2], convMethod, numThreads);
 
     // Relu
-    outputChannel = &(reluLayer(*inputChannel));
-    inputChannel = outputChannel;
+    channel1 = reluLayer(channel2);
 
     // FC_2
-    outputChannel = &(convLayer(*inputChannel, 1, 10, parameterFileNames[3], convMethod, numThreads));
+    channel2 = convLayer(channel1, 1, 10, parameterFileNames[3], convMethod, numThreads);
 
     std::vector<float> finalVector;
     finalVector.reserve(10);
     for (int i=0; i<10; i++) {
-        finalVector.push_back(outputChannel->at(i).matrix[0][0]);
+        finalVector.push_back(channel2[i].matrix[0][0]);
     }
     std::vector<std::vector<float>> finalVectorInFormat;
     finalVectorInFormat.push_back(finalVector);
-    Matrix finalMatrix = Matrix::Matrix(finalVectorInFormat);
+    Matrix finalMatrix = Matrix(finalVectorInFormat);
     finalMatrix.nonLinearActivation(Matrix::softmax);
 
     std::vector<std::tuple<int,float>> probabilityPairVector;

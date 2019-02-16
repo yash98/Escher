@@ -46,9 +46,9 @@ public:
 
     void addMatrixInto(Matrix& other);
 
-    void addIntInto(int givenInt);
+    void addConstInto(float givenFloat);
 
-    Matrix zeroes(int rows, int columns);
+    static Matrix zeroes(int rows, int columns);
 
     static void data_store();
 

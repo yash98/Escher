@@ -173,7 +173,6 @@ Matrix Matrix::convolution(const Matrix& kernel, bool doPadding, Matrix::convolM
 }
 
 void Matrix::padding(int rowPad, int columnPad) {
-    // TODO: could cause error due to shallow copy, dont think will cause error yet
     // special padding to maintain size
     // currently only for zero value pad
     // add column pad i.e columns-1/2 to existing rows
@@ -286,10 +285,10 @@ void Matrix::addMatrixInto(Matrix& other) {
     }
 }
 
-void Matrix::addIntInto(int givenInt) {
+void Matrix::addConstInto(float givenFloat) {
     for (int i=0; i<matrix.size(); i++) {
         for (int j=0; j<matrix[0].size(); j++) {
-            matrix[i][j] += givenInt;
+            matrix[i][j] += givenFloat;
         }
     }
 }

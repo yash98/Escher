@@ -60,6 +60,7 @@ Set all variables stated below according to your configurations.
 export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:/opt/intel/mkl/lib/intel64/
 export MKLROOT=/opt/intel/mkl
 export OPENBLASROOT=/opt/OpenBLAS
+export OPENCVINCLUDE=/usr/include/opencv4
 ```     
 
 1. LD_LIBRARY_PATH   

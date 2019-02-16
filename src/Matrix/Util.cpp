@@ -1,4 +1,4 @@
-#include "../include/Matrix/Util.h"
+#include "Matrix/Util.h"
 
 #include <cmath>
 #include <algorithm>

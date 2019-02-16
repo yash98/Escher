@@ -46,6 +46,8 @@ public:
 
     static void data_store();
 
+    int matrixMain (int argc, char* argv[]);
+
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
 private:
     static void splitColumnMajorAndPushBackRowMajor(std::string const& original, 

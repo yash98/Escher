@@ -1,4 +1,4 @@
-#include "../../include/Matrix/Matrix.h"
+#include "Matrix/Matrix.h"
 
 #include <mkl_cblas.h>
 

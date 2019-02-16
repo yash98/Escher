@@ -1,4 +1,4 @@
-#include "../../include/Matrix/Matrix.h"
+#include "Matrix/Matrix.h"
 #include <cblas.h>
 
 void Matrix::openblasMatrixMult(float* a, float* b, float* c, 

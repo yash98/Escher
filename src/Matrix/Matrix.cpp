@@ -1,5 +1,5 @@
-#include "../../include/Matrix/Matrix.h"
-#include "../../include/Matrix/Util.h"
+#include "Matrix/Matrix.h"
+#include "Matrix/Util.h"
 
 #include <fstream>
 #include <algorithm>
@@ -274,7 +274,7 @@ void Matrix::splitColumnMajorAndPushBackRowMajor(std::string const& original, ch
     }
 }
 
-int main (int argc, char* argv[]) {
+int Matrix::matrixMain (int argc, char* argv[]) {
     //  ./yourcode.out convolution_withpadding_matrixmult padsize matrix1.txt matrix1_numrows matrix2.txt matrix2_numrows
     if (argc<2) {
         std::cerr << "No args provided. Check README.md for usage." << std::endl;

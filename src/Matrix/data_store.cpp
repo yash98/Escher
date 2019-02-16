@@ -4,7 +4,7 @@
 #include <vector>
 #include <ctime>
 #include <cmath>
-#include "../../include/Matrix/Matrix.h"
+#include "Matrix/Matrix.h"
 
 float meanVal(float arr[], int size){
 	float mean = 0.0;

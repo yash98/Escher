@@ -1,5 +1,6 @@
 \documentclass{article}
-
+\usepackage{graphicx}
+\graphicspath{ {.} }
 \usepackage[backend=biber]{biblatex}
 \addbibresource{report.bib}
 
@@ -9,7 +10,8 @@
 
 \usepackage{url}
 
-\author{Yash Malviya \& Aniket Kumar}
+\author{Yash Malviya 2016CS50403 \\ Aniket Kumar 2016CS50397}
+
 \title{Accelerating Matrix Multiplication}
 \date{February 17, 2019}
 
@@ -34,7 +36,7 @@ mathematical operation.
     C \Leftarrow \alpha A*B + \beta C
 \end{math}
 
-here A is processed Toeplitz image matrix,
+where A is processed Toeplitz image matrix,
 B is processed kernel column vector, 
 C is zero matrix and 
 \begin{math}
@@ -52,6 +54,15 @@ Basic Linear Algebra Subprograms: \textcite{OpenBLAS:wiki}
 implementation of BLAS: \textcite{IntelMKL:doc}
 
 \section{Performance comparison}
+We get a increase in performance of calculating matrix convolution using these libraries.
+Intel MKL library give best performance among all these implementations.\newline
+As size of input matrix increases, time taken by PThread tends to time taken by IntelMKL library.\newline
+The comparison of performance of the three implementations(OpenBLAS , MKL and PThread) are shown as below :
+\begin{figure}
+  \includegraphics[width=\linewidth]{performance.png}
+  \caption{Plot of time V/S Matrix Size in different implementations}
+%   \label{fig:}
+\end{figure}
 
 \section{Acceleration with pthreads}
 
@@ -65,8 +76,8 @@ implementation of BLAS: \textcite{IntelMKL:doc}
     round robin fashion. 
     
     \textit{For Ex:} say there are k threads, then thread with 
-    tid 0 gets 1\textsuperscript{st} column, k+1\textsuperscript{th} 
-    column 2k+1\textsuperscript{th} column and so on.
+    tid 0 gets 1\textsuperscript{st} row, k+1\textsuperscript{th} 
+    row 2k+1\textsuperscript{th} row and so on.
 
 
 \end{itemize}

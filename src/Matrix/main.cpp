@@ -91,6 +91,6 @@ int main (int argc, char* argv[]) {
 // int main() {
 //     Matrix random1 = Matrix("../a.txt", 5);
 //     Matrix random2 = Matrix("../b.txt", 4);
-//     Matrix result = random1.convolution(random2, false, Matrix::simpleConvol, 4);
+//     Matrix result = random2.pooling(Matrix::maxPooling, 2, 2, 2);
 //     result.toOStream(std::cout);
 // }

@@ -53,13 +53,13 @@ Matrix::convolMethod method, int numThreads) {
             Matrix& eachInputMatrix = inputChannel[j];
 
             std::vector<std::vector<float>> kernelVec(squareKernelSide, std::vector<float>(squareKernelSide));
-            for (int k=0; k<squareKernelSide; k++) {
-                for (int l=0; l<squareKernelSide; l++) {
+            for (int k=squareKernelSide-1; k>=0; k--) {
+                for (int l=squareKernelSide-1; l>=0; l--) {
                     std::string line;
                     std::getline(parameterFile, line);
                     // file in row major
                     // reading in column major order to transpose
-                    kernelVec[l][k] = stof(line);
+                    kernelVec[k][l] = stof(line);
                 }
             }
             Matrix kernel = Matrix(kernelVec);

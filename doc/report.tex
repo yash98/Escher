@@ -3,6 +3,10 @@
 \usepackage[backend=biber]{biblatex}
 \addbibresource{report.bib}
 
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+
 \usepackage{url}
 
 \author{Yash Malviya \& Aniket Kumar}
@@ -13,6 +17,24 @@
 \maketitle
 
 \section{Linear Algebra Libraries}
+
+The following was done to speed up convolution process 
+required for solving Digit Recognition Problem using 
+Convolutional Nueral Networks. 
+
+Convolution is done by converting the image and kernel 
+into corresponding Toeplitz matrices
+(\textcite{wiki:toepliz}).
+
+Function from Basic Linear Algebra Subprograms used 
+\textbf{cblas\_sgemm}.
+
+\begin{math}
+    C = \alpha A*B + \beta C
+\end{math}
+
+where A is processed Toeplitz image matrix,
+B is processed kernel column vector,
 
 \subsection{OpenBLAS}
 

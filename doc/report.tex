@@ -27,30 +27,35 @@ into corresponding Toeplitz matrices
 (\textcite{wiki:toepliz}).
 
 Function from Basic Linear Algebra Subprograms used 
-\textbf{cblas\_sgemm}.
+\textbf{cblas\_sgemm}. Which perform following 
+mathematical operation.
 
 \begin{math}
-    C = \alpha A*B + \beta C
+    C \Leftarrow \alpha A*B + \beta C
 \end{math}
 
-where A is processed Toeplitz image matrix,
-B is processed kernel column vector,
+here A is processed Toeplitz image matrix,
+B is processed kernel column vector, 
+C is zero matrix and 
+\begin{math}
+    \alpha(=1.0)\ and\ \beta(=0.0)\ are\ constants.
+\end{math}
 
 \subsection{OpenBLAS}
 
-Open source implementation of the 
+\emph{Open source} implementation of the 
 Basic Linear Algebra Subprograms: \textcite{OpenBLAS:wiki} 
 
-\subsection{Inel MKL}
+\subsection{Intel MKL}
 
-Intel's Math Kernel Library, another 
+\emph{Intel}'s Math Kernel Library, another 
 implementation of BLAS: \textcite{IntelMKL:doc}
 
 \section{Performance comparison}
 
 \section{Acceleration with pthreads}
 
-\emph{Parallelization Stratergy}
+\subsection{Parallelization Stratergy}
 
 \begin{itemize}
     \item Inner product of row of A and the column vector B 
@@ -65,6 +70,17 @@ implementation of BLAS: \textcite{IntelMKL:doc}
 
 
 \end{itemize}
+
+\subsection{Difficulties encountered}
+
+\begin{enumerate}
+    \item Writing to only different sections of 
+    shared memory space.
+    \item Ensuring all shared memory which was 
+    allocated on heap doesn't leak.
+    \item Passing thread ID to each thread 
+    through shared space. 
+\end{enumerate}
 
 \printbibliography
 

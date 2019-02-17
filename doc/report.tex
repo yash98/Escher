@@ -1,0 +1,49 @@
+\documentclass{article}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{report.bib}
+
+\usepackage{url}
+
+\author{Yash Malviya \& Aniket Kumar}
+\title{Accelerating Matrix Multiplication}
+\date{February 17, 2019}
+
+\begin{document}
+\maketitle
+
+\section{Linear Algebra Libraries}
+
+\subsection{OpenBLAS}
+
+Open source implementation of the 
+Basic Linear Algebra Subprograms: \textcite{OpenBLAS:wiki} 
+
+\subsection{Inel MKL}
+
+Intel's Math Kernel Library, another 
+implementation of BLAS: \textcite{IntelMKL:doc}
+
+\section{Performance comparison}
+
+\section{Acceleration with pthreads}
+
+\emph{Parallelization Stratergy}
+
+\begin{itemize}
+    \item Inner product of row of A and the column vector B 
+    is done by each thread.
+
+    \item Each thread gets the row it operates on, in a 
+    round robin fashion. 
+    
+    \textit{For Ex:} say there are k threads, then thread with 
+    tid 0 gets 1\textsuperscript{st} column, k+1\textsuperscript{th} 
+    column 2k+1\textsuperscript{th} column and so on.
+
+
+\end{itemize}
+
+\printbibliography
+
+\end{document}

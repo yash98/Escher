@@ -77,6 +77,7 @@ Matrix::convolMethod method, int numThreads) {
         toAddBiasToMatrix.addConstInto(stof(line));
     }
 
+    parameterFile.close();
     return outputChannel;
 }
 

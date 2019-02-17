@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
+#include <ctime>
+#include <stdlib.h>
 
 Matrix::Matrix() {}
 
@@ -295,4 +297,21 @@ void Matrix::addConstInto(float givenFloat) {
 
 Matrix Matrix::zeroes(int rows, int columns) {
     return Matrix(std::vector<std::vector<float>>(rows, std::vector<float>(columns)));
+}
+
+Matrix Matrix::randomMatrix(int rows, int columns) {
+    int secret_num;
+	srand(time(NULL));
+	std::vector<std::vector<float>> vec;
+	for(int i=0;i<rows;i++){
+		std::vector<float> rowVector;
+		rowVector.reserve(rows);
+		for(int j=0;j<columns;j++){
+			secret_num = rand();
+			rowVector.push_back(float(secret_num));
+		}
+		vec.push_back(rowVector);
+	}
+	Matrix mat = Matrix(vec);
+    return mat;
 }

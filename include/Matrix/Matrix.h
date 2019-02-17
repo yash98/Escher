@@ -50,6 +50,8 @@ public:
 
     static Matrix zeroes(int rows, int columns);
 
+    static Matrix randomMatrix(int rows, int columns);
+
     static void data_store();
 
     // HELPERS ONLY APPLICABLE TO MATRIX CLASS
